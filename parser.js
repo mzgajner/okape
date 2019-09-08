@@ -1,4 +1,5 @@
-const parse = require('csv-parse/lib/sync')
+const cheerio = require('cheerio');
+const axios = require('axios');
 const fs = require('fs');
 const _ = require('lodash');
 
@@ -17,46 +18,67 @@ const MUNICIPALITIES = [
   'Rogatec',
   'Šmarje pri Jelšah',
 ]
+const OKP_URL = 'http://okp.si/jsnaga_urniki_odvoza_gospodinjstvo_2019.php';
 
-// Parse CSV to get all lines in the file
-const scheduleCsv = fs.readFileSync('schedule.csv', 'utf-8');
-const scheduleLines = parse(scheduleCsv, {
-  columns: true,
-  skip_empty_lines: true
-})
+axios.get(OKP_URL).then((response) => {
+  // Parse HTML to get an array of lines
+  const $ = cheerio.load(response.data)
+  const tableRows = $('body table tr');
+  const scheduleLines = [];
 
-// Walk through the lines and build an object column value arrays keyed by day
-const columns = scheduleLines.reduce((acc, line) => {
-  DAYS.forEach(day => {
-    const existingValues = acc[day];
-    const newValue = line[day.toUpperCase()];
-    if (newValue.trim() !== '') {
-      acc[day] = existingValues ? existingValues.concat([newValue]) : [newValue];
-    }
-  })
-  return acc;
-}, {})
-
-// Construct object of street arrays keyed by municipalities
-let streetsByMunicipality = _.fromPairs(MUNICIPALITIES.map(m => [m, {}]));
-
-DAYS.forEach(day => {
-  let currentMunicipality = null;
-  columns[day].forEach(value => {
-    const municipality = checkMunicipality(value);
-    if (municipality) {
-      currentMunicipality = municipality;
-    } else {
-      const street = value;
-      streetsByMunicipality[currentMunicipality][street] = day;
-    }
+  tableRows.each((i, row) => {
+    const rowText = $(row)
+      .text()
+      .split('\n')
+      .map(text => text.replace(/ +(?= )/g,'').trim())
+      .slice(1, 6)
+    scheduleLines.push(rowText);
   });
+
+  // Remove the first line with day names
+  scheduleLines.shift();
+
+  // Walk through the lines and build an object of column value arrays keyed by day
+  const columns = scheduleLines.reduce((acc, line) => {
+    DAYS.forEach((day, index) => {
+      const existingValues = acc[day];
+      const newValue = line[index];
+      if (newValue.trim() !== '') {
+        acc[day] = existingValues ? existingValues.concat([newValue]) : [newValue];
+      }
+    })
+    return acc;
+  }, {});
+
+  // Construct object of street arrays keyed by municipalities
+  let streetsByMunicipality = _.fromPairs(MUNICIPALITIES.map(m => [m, {}]));
+
+  DAYS.forEach(day => {
+    let currentMunicipality = null;
+    columns[day].forEach(value => {
+      const municipality = checkMunicipality(value);
+      if (municipality) {
+        currentMunicipality = municipality;
+      } else {
+        const existingStreets = streetsByMunicipality[currentMunicipality];
+        const streetName = checkPartialStreet(value, existingStreets);
+        existingStreets[streetName] = day;
+      }
+    });
+  });
+
+  streetsByMunicipality = sortKeys(streetsByMunicipality);
+  streetsByMunicipality = _.mapValues(streetsByMunicipality, sortKeys);
+
+  fs.writeFileSync(
+    'src/schedule.json',
+    JSON.stringify(streetsByMunicipality, null, 4)
+  );
 });
 
-// streetsByMunicipality = _.mapValues(streetsByMunicipality, s => s.sort());
 
 function checkMunicipality(string) {
-  // Municipalities are uppercase in the input CSV
+  // Municipalities are uppercase in the input data
   if (string !== string.toUpperCase()) {
     return null
   }
@@ -65,4 +87,40 @@ function checkMunicipality(string) {
   return MUNICIPALITIES[position];
 }
 
-console.log(streetsByMunicipality);
+function checkPartialStreet(streetName, existingStreets) {
+  const partial = streetName.match(/\s?-\s?del/);
+  let newName = cleanUp(streetName);
+
+  if (partial) {
+    let partCount = 1;
+    do {
+      newName = streetName.replace(partial[0], ` - ${partCount}. del`);
+      partCount++;
+    } while(existingStreets[newName])
+  }
+
+  return newName;
+}
+
+const STREET_NAME_FIXES = {
+  'Dol/Mestinje': 'Dol pri Pristavi',
+  'Brezovec/Rogatec': 'Brezovec pri Rogatcu',
+  'Brezovec/Polje': 'Brezovec pri Polju',
+  'Pristava/Lesično': 'Pristava pri Lesičnem',
+  'Pristava/Mestinje': 'Pristava pri Mestinju',
+  'Cerovec/Šmarje': 'Cerovec pri Šmarju',
+  'Zg.Sečovo': 'Zg. Sečovo'
+};
+
+function cleanUp(streetName) {
+  return STREET_NAME_FIXES[streetName] || streetName;
+}
+
+function sortKeys(object) {
+  return Object.keys(object)
+    .sort((a, b) => a.localeCompare(b))
+    .reduce(function (result, key) {
+      result[key] = object[key];
+      return result;
+    }, {});
+}
