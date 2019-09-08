@@ -38,7 +38,7 @@ import VueMultiselect from "vue-multiselect";
 
 import schedule from "./schedule.json";
 
-const DAYS_LOCATIVE = {
+const DAYS_LOCATIVE:{[key:string]: string} = {
   'ponedeljek': 'ponedeljek',
   'torek': 'torek',
   'sreda': 'sredo',
@@ -50,27 +50,28 @@ export default Vue.extend({
   name: "app",
   data() {
     return {
-      municipality: null,
-      street: null,
+      municipality: <string|null>null,
+      street: <string|null>null,
+      schedule: schedule as {[key:string]: {[key:string]: string}},
     };
   },
   components: {
     VueMultiselect,
   },
   computed: {
-    municipalities() {
-      return Object.keys(schedule);
+    municipalities(): string[] {
+      return Object.keys(this.schedule);
     },
     streets(): string[] {
       if (this.municipality) {
-        return Object.keys(schedule[this.municipality] || {});
+        return Object.keys(this.schedule[this.municipality] || {});
       } else {
         return []
       }
     },
     garbagePickupDay(): string {
       if (this.municipality && this.street) {
-        const dayGenitive = schedule[this.municipality][this.street];
+        const dayGenitive = this.schedule[this.municipality][this.street];
         return DAYS_LOCATIVE[dayGenitive];
       } else {
         return '';
