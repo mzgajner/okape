@@ -98,6 +98,7 @@ body {
   color: #35495E;
   display: flex;
   font-size: 18px;
+  justify-content: center;
   margin: 0;
   padding: 1rem;
 }
@@ -109,6 +110,7 @@ body {
   flex-direction: column;
   font-family: Courier New, Helvetica, Arial, sans-serif;
   justify-content: center;
+  max-width: 400px;
   text-align: center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
