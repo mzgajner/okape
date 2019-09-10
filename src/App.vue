@@ -9,6 +9,7 @@
       :allow-empty="false"
       :options="municipalities"
       :showLabels="false"
+      :searchable="false"
       v-model="municipality"
       placeholder="Občina"
       class="dropdown"
