@@ -23,13 +23,7 @@
       placeholder="Ulica/Kraj"
       class="dropdown"
     />
-    <p class="notice">
-      {{
-        garbagePickupDay
-          ? `OKP pride v ${garbagePickupDay }.`
-          : 'Izberi lokacijo.'
-      }}
-    </p>
+    <p class="notice" v-html="upcoming || 'Izberi lokacijo.'" />
   </div>
 </template>
 
@@ -37,6 +31,7 @@
 import Vue from "vue";
 import VueMultiselect from "vue-multiselect";
 
+import { generateDates } from './helpers';
 import schedule from "./schedule.json";
 
 const DAYS_LOCATIVE:{[key:string]: string} = {
@@ -54,6 +49,7 @@ export default Vue.extend({
       municipality: <string|null>null,
       street: <string|null>null,
       schedule: schedule as {[key:string]: {[key:string]: string}},
+      upcoming: <string>'',
     };
   },
   components: {
@@ -70,19 +66,21 @@ export default Vue.extend({
         return []
       }
     },
-    garbagePickupDay(): string {
+    garbagePickupDay(): string|null {
       if (this.municipality && this.street) {
-        const dayGenitive = this.schedule[this.municipality][this.street];
-        return DAYS_LOCATIVE[dayGenitive];
+        return this.schedule[this.municipality][this.street];
       } else {
-        return '';
+        return null;
       }
     }
   },
   watch: {
     municipality() {
       this.street = null;
-    }
+    },
+    garbagePickupDay(newValue) {
+      this.upcoming = newValue ? generateDates(newValue) : '';
+    },
   }
 });
 </script>
