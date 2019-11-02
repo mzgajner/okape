@@ -6,27 +6,28 @@
       title="Garbage Truck by Karla Design from the Noun Project."
     />
     <template v-if="pickups.length === 0">
-    <vue-multiselect
-      :allow-empty="false"
-      :options="municipalities"
-      :showLabels="false"
-      :searchable="false"
-      v-model="municipality"
-      placeholder="Občina"
-      class="dropdown"
-    />
-    <vue-multiselect
-      :allow-empty="false"
-      :disabled="!municipality"
-      :options="streets"
-      :showLabels="false"
-      v-model="street"
-      placeholder="Ulica/Kraj"
-      class="dropdown"
-    />
+      <vue-multiselect
+        :allow-empty="false"
+        :options="municipalities"
+        :showLabels="false"
+        :searchable="false"
+        v-model="municipality"
+        placeholder="Občina"
+        class="dropdown"
+      />
+      <vue-multiselect
+        :allow-empty="false"
+        :disabled="!municipality"
+        :options="streets"
+        :showLabels="false"
+        v-model="street"
+        placeholder="Ulica/Kraj"
+        class="dropdown"
+      />
     </template>
     <template v-else>
-      OKP pride po:
+      {{ street }}<br>
+      <a class="reset-link" href="#" @click.prevent="reset">resetiraj</a>
       <ul>
         <li
           v-for="pickup in pickups"
@@ -69,6 +70,10 @@ export default Vue.extend({
   components: {
     VueMultiselect,
   },
+  created() {
+    this.municipality = localStorage.getItem('municipality');
+    this.street = localStorage.getItem('street');
+  },
   computed: {
     municipalities(): string[] {
       return Object.keys(this.schedule);
@@ -90,7 +95,20 @@ export default Vue.extend({
   },
   watch: {
     garbagePickupDay(newValue) {
-      this.pickups = newValue ? generatePickups(newValue) : [];
+      if (newValue) {
+        localStorage.setItem('municipality', this.municipality!);
+        localStorage.setItem('street', this.street!);
+        this.pickups = generatePickups(newValue);
+      } else {
+        localStorage.clear();
+        this.pickups = [];
+      }
+    },
+  },
+  methods: {
+    reset() {
+      this.municipality = null;
+      this.street = null;
     },
   },
 });
@@ -141,5 +159,10 @@ body {
 
 li:not(:last-child) {
   margin-bottom: 0.5rem;
+}
+
+.reset-link {
+  /* font-size: 0.75rem; */
+  color: grey;
 }
 </style>

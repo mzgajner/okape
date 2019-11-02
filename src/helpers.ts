@@ -24,13 +24,13 @@ export type Pickup = {
 }
 
 const packaging:GarbageType = {
-  label: 'embalažo',
+  label: 'embalaža',
   color: Color.Yellow,
   validate: (date: Date) => getWeek(date) % 2 === 0,
 }
 
 const mixed:GarbageType = {
-  label: 'mešane odpadke',
+  label: 'mešani odpadki',
   color: Color.Green,
   validate: (date: Date) => getWeek(date) % 2 === 1,
 }
@@ -54,7 +54,7 @@ const textile:GarbageType = {
 }
 
 const electronics:GarbageType = {
-  label: 'elektroniko',
+  label: 'elektronika',
   color: Color.Purple,
   validate: (date: Date) => [19, 49].includes(getWeek(date)),
 }
@@ -69,7 +69,6 @@ function checkDate(date: Date, day: number, garbageType: GarbageType) {
 
 function formatDate(date: Date) {
   const today = startOfToday();
-  let formattingFunction;
 
   if (differenceInDays(date, today) <= 6) {
     return formatRelative(date, today, { locale: sl })
