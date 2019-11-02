@@ -5,6 +5,7 @@
       src="./assets/garbage_truck.svg"
       title="Garbage Truck by Karla Design from the Noun Project."
     />
+    <template v-if="pickups.length === 0">
     <vue-multiselect
       :allow-empty="false"
       :options="municipalities"
@@ -23,7 +24,20 @@
       placeholder="Ulica/Kraj"
       class="dropdown"
     />
-    <p class="notice" v-html="upcoming || 'Izberi lokacijo.'" />
+    </template>
+    <template v-else>
+      OKP pride po:
+      <ul>
+        <li
+          v-for="pickup in pickups"
+          :key="pickup.type"
+        >
+          <span :style="`background: ${pickup.color}`">{{ pickup.type }}</span>
+          <br />
+          {{ pickup.time }}
+        </li>
+      </ul>
+    </template>
   </div>
 </template>
 
@@ -31,7 +45,7 @@
 import Vue from "vue";
 import VueMultiselect from "vue-multiselect";
 
-import { generateDates } from './helpers';
+import { Pickup, generatePickups } from './helpers';
 import schedule from "./schedule.json";
 
 const DAYS_LOCATIVE:{[key:string]: string} = {
@@ -49,7 +63,7 @@ export default Vue.extend({
       municipality: <string|null>null,
       street: <string|null>null,
       schedule: schedule as {[key:string]: {[key:string]: string}},
-      upcoming: <string>'',
+      pickups: <Pickup[]>[],
     };
   },
   components: {
@@ -75,13 +89,10 @@ export default Vue.extend({
     }
   },
   watch: {
-    municipality() {
-      this.street = null;
-    },
     garbagePickupDay(newValue) {
-      this.upcoming = newValue ? generateDates(newValue) : '';
+      this.pickups = newValue ? generatePickups(newValue) : [];
     },
-  }
+  },
 });
 </script>
 
@@ -111,7 +122,6 @@ body {
   font-family: Courier New, Helvetica, Arial, sans-serif;
   justify-content: center;
   max-width: 400px;
-  text-align: center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -127,5 +137,9 @@ body {
 
 .notice {
   margin: 1rem 0;
+}
+
+li:not(:last-child) {
+  margin-bottom: 0.5rem;
 }
 </style>

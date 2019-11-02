@@ -1,38 +1,61 @@
 import { addDays, differenceInDays, formatDistance, formatRelative, getDay, getWeek, startOfToday } from 'date-fns'
 import { sl } from 'date-fns/locale'
 
+enum Color {
+  Red = '#FE7568',
+  Yellow = '#FEE760',
+  Blue = '#5FA1E8',
+  Green = '#5CCC54',
+  Purple = '#C763F2',
+  Brown = '#B56C41',
+  Greenish = '#AAAD3E',
+}
+
 type GarbageType = {
   label: string,
+  color: Color,
   validate(date: Date): boolean,
+}
+
+export type Pickup = {
+  type: string,
+  color: Color,
+  time: string,
 }
 
 const packaging:GarbageType = {
   label: 'embalažo',
+  color: Color.Yellow,
   validate: (date: Date) => getWeek(date) % 2 === 0,
 }
 
 const mixed:GarbageType = {
   label: 'mešane odpadke',
+  color: Color.Green,
   validate: (date: Date) => getWeek(date) % 2 === 1,
 }
 
 const paper:GarbageType = {
   label: 'papir',
+  color: Color.Blue,
   validate: (date: Date) => [3, 13, 21, 29, 39, 47].includes(getWeek(date)),
 }
 
 const glass:GarbageType = {
   label: 'steklo',
+  color: Color.Red,
   validate: (date: Date) => [7, 17, 25, 35, 43, 51].includes(getWeek(date)),
 }
 
 const textile:GarbageType = {
   label: 'tekstil',
+  color: Color.Greenish,
   validate: (date: Date) => [11, 41].includes(getWeek(date)),
 }
 
 const electronics:GarbageType = {
   label: 'elektroniko',
+  color: Color.Purple,
   validate: (date: Date) => [19, 49].includes(getWeek(date)),
 }
 
@@ -57,16 +80,19 @@ function formatDate(date: Date) {
   }
 };
 
-export function generateDates(weekdayName: string) {
+export function generatePickups(weekdayName: string): Pickup[] {
   const weekdayNumber = WEEKDAYS.indexOf(weekdayName);
 
-  return allGarbageTypes.map(type => {
-    let date = new Date();
+  return allGarbageTypes
+    .map(type => {
+      let date = new Date();
 
-    while (checkDate(date, weekdayNumber, type) !== true) {
-      date = addDays(date, 1);
-    }
+      while (checkDate(date, weekdayNumber, type) !== true) {
+        date = addDays(date, 1);
+      }
 
-    return `Po ${type.label} pridejo ${formatDate(date)}.`;
-  }).join('<br>');
+      return { type: type.label, color: type.color, time: date };
+    })
+    .sort((a, b) => Number(a.time) - Number(b.time))
+    .map(day => ({...day, time: formatDate(day.time)}));
 }
