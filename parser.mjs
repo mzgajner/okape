@@ -134,20 +134,30 @@ const generateEntries = (schedule, garbageType, houseType) => {
   const days = Object.keys(schedule);
   const entries = []
 
+  // Loop through all columns (days) in the schedule
   days.forEach(day => {
     let currentMunicipality = null;
-    schedule[day].forEach(value => {
+    const column = schedule[day];
+
+    // Loop through all cells (streets) in the column
+    for (let i = 0; i < column.length; i++) {
+      let value = column[i];
+
+      // A cell might sometimes hold a municipality
       const municipality = getMunicipality(value);
+
+      // If that's the case and it's not the current municipality, we've hit
+      // a new municipality, so change the current municipality and move to
+      // the next cell.
       if (municipality && municipality !== currentMunicipality) {
         currentMunicipality = municipality;
-        return;
+        continue;
       }
 
+      // If the value is a municipality that's same as the current one, it's a
+      // fallback, so we use it as the street name.
       if (municipality) {
-        // If "Kozje" or "Bistrica ob Sotli" appears as a street under the
-        // municipality of the same name, treat it as a legit street name.
-        // Otherwise, treat it as a catch-all default.
-        value =  ['Kozje', 'Bistrica ob Sotli'].includes(municipality) ? municipality : 'Ostalo';
+        value = municipality;
       }
 
       cleanStreetName(value).forEach(street => {
@@ -159,7 +169,7 @@ const generateEntries = (schedule, garbageType, houseType) => {
           houseType,
         });
       })
-    });
+    };
   });
 
   return entries;
@@ -180,14 +190,27 @@ const main = async () => {
     // This is missing from the website but confirmed by personal experience
     { garbageType: 'organic', day: 'četrtek', municipality: 'Rogaška Slatina', street: 'Kamence', houseType: 'singleHome' },
 
-    // These are all badly indicated on the website so I hardcode them instead of parsing
-    { garbageType: 'organic', day: 'torek', municipality: 'Bistrica ob Sotli', street: 'Ostalo', houseType: 'singleHome' },
-    { garbageType: 'regular', day: 'ponedeljek', municipality: 'Podčetrtek', street: 'Ostalo', houseType: 'apartmentBuilding' },
-    { garbageType: 'regular', day: 'torek', municipality: 'Bistrica ob Sotli', street: 'Ostalo', houseType: 'apartmentBuilding' },
-    { garbageType: 'regular', day: 'torek', municipality: 'Kozje', street: 'Ostalo', houseType: 'apartmentBuilding' },
-    { garbageType: 'regular', day: 'sreda', municipality: 'Šmarje pri Jelšah', street: 'Ostalo', houseType: 'apartmentBuilding' },
-    { garbageType: 'regular', day: 'četrtek', municipality: 'Rogaška Slatina', street: 'Ostalo', houseType: 'apartmentBuilding' },
-    { garbageType: 'regular', day: 'petek', municipality: 'Rogatec', street: 'Ostalo', houseType: 'apartmentBuilding' },
+    // These are fallbacks present on website but hardcoded for convenience
+
+    // Single home organic
+    { garbageType: 'organic', day: 'torek', municipality: 'Bistrica ob Sotli', street: 'Bistrica ob Sotli', houseType: 'singleHome' },
+    { garbageType: 'organic', day: 'torek', municipality: 'Kozje', street: 'Kozje', houseType: 'singleHome' },
+    { garbageType: 'organic', day: 'torek', municipality: 'Podčetrtek', street: 'Podčetrtek', houseType: 'singleHome' },
+    { garbageType: 'organic', day: 'petek', municipality: 'Rogatec', street: 'Rogatec', houseType: 'singleHome' },
+
+    // Apartment building organic
+    { garbageType: 'organic', day: 'torek', municipality: 'Bistrica ob Sotli', street: 'Bistrica ob Sotli', houseType: 'apartmentBuilding' },
+    { garbageType: 'organic', day: 'torek', municipality: 'Kozje', street: 'Kozje', houseType: 'apartmentBuilding' },
+    { garbageType: 'organic', day: 'torek', municipality: 'Podčetrtek', street: 'Podčetrtek', houseType: 'apartmentBuilding' },
+    { garbageType: 'organic', day: 'sreda', municipality: 'Rogatec', street: 'Rogatec', houseType: 'apartmentBuilding' },
+
+    // Apartment building regular
+    { garbageType: 'regular', day: 'torek', municipality: 'Bistrica ob Sotli', street: 'Bistrica ob Sotli', houseType: 'apartmentBuilding' },
+    { garbageType: 'regular', day: 'torek', municipality: 'Kozje', street: 'Kozje', houseType: 'apartmentBuilding' },
+    { garbageType: 'regular', day: 'ponedeljek', municipality: 'Podčetrtek', street: 'Podčetrtek', houseType: 'apartmentBuilding' },
+    { garbageType: 'regular', day: 'četrtek', municipality: 'Rogaška Slatina', street: 'Rogaška Slatina', houseType: 'apartmentBuilding' },
+    { garbageType: 'regular', day: 'petek', municipality: 'Rogatec', street: 'Rogatec', houseType: 'apartmentBuilding' },
+    { garbageType: 'regular', day: 'sreda', municipality: 'Šmarje pri Jelšah', street: 'Šmarje pri Jelšah', houseType: 'apartmentBuilding' },
 
     // These are parsed directly from the website
     ...generateEntries(schedules[0], 'regular', 'singleHome'),
@@ -198,6 +221,7 @@ const main = async () => {
 
   let streetsByMunicipality = _.fromPairs(MUNICIPALITIES.map(m => [m, {}]));
 
+  // Generate empty schedules for all streets.
   entries.forEach(e => {
     streetsByMunicipality[e.municipality][e.street] = {
       singleHome: { regular: [], organic: [] },
@@ -205,19 +229,13 @@ const main = async () => {
     }
   });
 
+  // Populate schedules with specific street data
   entries.forEach(e => {
     const currentSelection = streetsByMunicipality[e.municipality][e.street][e.houseType];
-    currentSelection[e.garbageType].push(e.day)
-
-    if (e.garbageType === 'organic' && currentSelection.regular.length === 0) {
-      try {
-        currentSelection.regular = streetsByMunicipality[e.municipality]['Ostalo'][e.houseType].regular;
-      } catch (error) {
-        console.log(e)
-      }
-    }
+    currentSelection[e.garbageType] = _.uniq(currentSelection[e.garbageType].concat([e.day]));
   });
 
+  // Create a nested schedule object
   streetsByMunicipality = sortKeys(streetsByMunicipality);
   streetsByMunicipality = _.mapValues(streetsByMunicipality, sortKeys);
 
