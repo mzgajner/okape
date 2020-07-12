@@ -1,5 +1,10 @@
 import { addDays, differenceInDays, formatDistance, formatRelative, getDay, getWeek, startOfToday } from 'date-fns'
 import { sl } from 'date-fns/locale'
+import { Weekday } from './types'
+import { Schedule } from './types';
+import scheduleRaw from './schedule.json';
+
+export const schedule = scheduleRaw as Schedule;
 
 enum Color {
   Red = '#FE7568',
@@ -61,8 +66,6 @@ const electronics:GarbageType = {
 
 const allGarbageTypes:GarbageType[] = [packaging, mixed, paper, glass, textile, electronics];
 
-const WEEKDAYS = ['nedelja', 'ponedeljek', 'torek', 'sreda', 'četrtek', 'petek', 'sobota'];
-
 function checkDate(date: Date, day: number, garbageType: GarbageType) {
   return getDay(date) === day && garbageType.validate(date);
 };
@@ -80,7 +83,7 @@ function formatDate(date: Date) {
 };
 
 export function generatePickups(weekdayName: string): Pickup[] {
-  const weekdayNumber = WEEKDAYS.indexOf(weekdayName);
+  const weekdayNumber = Object.values(Weekday).indexOf(weekdayName as Weekday);
 
   return allGarbageTypes
     .map(type => {

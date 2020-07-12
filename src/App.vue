@@ -5,49 +5,15 @@
       src="./assets/garbage_truck.svg"
       title="Garbage Truck by Karla Design from the Noun Project."
     />
-    <template v-if="pickups.length === 0">
-      <vue-multiselect
-        :allow-empty="false"
-        :options="municipalities"
-        :showLabels="false"
-        :searchable="false"
-        v-model="municipality"
-        placeholder="Občina"
-        class="dropdown"
-      />
-      <vue-multiselect
-        :allow-empty="false"
-        :disabled="!municipality"
-        :options="streets"
-        :showLabels="false"
-        v-model="street"
-        placeholder="Ulica/Kraj"
-        class="dropdown"
-      />
-    </template>
-    <template v-else>
-      {{ street }}<br>
-      <a class="reset-link" href="#" @click.prevent="reset">resetiraj</a>
-      <ul>
-        <li
-          v-for="pickup in pickups"
-          :key="pickup.type"
-        >
-          <span :style="`background: ${pickup.color}`">{{ pickup.type }}</span>
-          <br />
-          {{ pickup.time }}
-        </li>
-      </ul>
-    </template>
+
+    <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import VueMultiselect from "vue-multiselect";
 
 import { Pickup, generatePickups } from './helpers';
-import schedule from "./schedule.json";
 
 const DAYS_LOCATIVE:{[key:string]: string} = {
   'ponedeljek': 'ponedeljek',
@@ -59,58 +25,47 @@ const DAYS_LOCATIVE:{[key:string]: string} = {
 
 export default Vue.extend({
   name: "app",
-  data() {
-    return {
-      municipality: <string|null>null,
-      street: <string|null>null,
-      schedule: schedule as {[key:string]: {[key:string]: string}},
-      pickups: <Pickup[]>[],
-    };
-  },
-  components: {
-    VueMultiselect,
-  },
-  created() {
-    this.municipality = localStorage.getItem('municipality');
-    this.street = localStorage.getItem('street');
-  },
-  computed: {
-    municipalities(): string[] {
-      return Object.keys(this.schedule);
-    },
-    streets(): string[] {
-      if (this.municipality) {
-        return Object.keys(this.schedule[this.municipality] || {});
-      } else {
-        return []
-      }
-    },
-    garbagePickupDay(): string|null {
-      if (this.municipality && this.street) {
-        return this.schedule[this.municipality][this.street];
-      } else {
-        return null;
-      }
-    }
-  },
-  watch: {
-    garbagePickupDay(newValue) {
-      if (newValue) {
-        localStorage.setItem('municipality', this.municipality!);
-        localStorage.setItem('street', this.street!);
-        this.pickups = generatePickups(newValue);
-      } else {
-        localStorage.clear();
-        this.pickups = [];
-      }
-    },
-  },
-  methods: {
-    reset() {
-      this.municipality = null;
-      this.street = null;
-    },
-  },
+  // created() {
+  //   this.municipality = localStorage.getItem('municipality');
+  //   this.street = localStorage.getItem('street');
+  // },
+  // computed: {
+  //   municipalities(): string[] {
+  //     return Object.keys(this.schedule);
+  //   },
+  //   streets(): string[] {
+  //     if (this.municipality) {
+  //       return Object.keys(this.schedule[this.municipality] || {});
+  //     } else {
+  //       return []
+  //     }
+  //   },
+  //   garbagePickupDay(): string|null {
+  //     if (this.municipality && this.street) {
+  //       return this.schedule[this.municipality][this.street];
+  //     } else {
+  //       return null;
+  //     }
+  //   }
+  // },
+  // watch: {
+  //   garbagePickupDay(newValue) {
+  //     if (newValue) {
+  //       localStorage.setItem('municipality', this.municipality!);
+  //       localStorage.setItem('street', this.street!);
+  //       this.pickups = generatePickups(newValue);
+  //     } else {
+  //       localStorage.clear();
+  //       this.pickups = [];
+  //     }
+  //   },
+  // },
+  // methods: {
+  //   reset() {
+  //     this.municipality = null;
+  //     this.street = null;
+  //   },
+  // },
 });
 </script>
 
