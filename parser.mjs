@@ -225,6 +225,11 @@ const main = async () => {
     'src/schedule.json',
     JSON.stringify(streetsByMunicipality)
   );
+
+  fs.writeFileSync(
+    'src/schedule-dev.json',
+    JSON.stringify(streetsByMunicipality, null, 2)
+  );
 }
 
 main();
