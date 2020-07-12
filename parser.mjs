@@ -1,7 +1,7 @@
-const cheerio = require('cheerio');
-const axios = require('axios');
-const fs = require('fs');
-const _ = require('lodash');
+import cheerio from 'cheerio';
+import https from 'https';
+import fs from 'fs';
+import _ from 'lodash';
 
 const MUNICIPALITIES = [
   'Bistrica ob Sotli',
@@ -80,36 +80,47 @@ const getScheduleForURL = url => {
     'petek',
   ];
 
-  return axios.get(url).then((response) => {
-    // Parse HTML to get an array of lines
-    const $ = cheerio.load(response.data)
-    const tableRows = $('body table:last-of-type tr');
-    const scheduleLines = [];
+  return new Promise((resolve, reject) => {
+    https.get(url, response => {
+      response.setEncoding("utf8");
+      let body = "";
+      response.on("data", data => {
+        body += data;
+      });
+      response.on("end", () => {
+        // Parse HTML to get an array of lines
+        const $ = cheerio.load(body)
+        const tableRows = $('body table:last-of-type tr');
+        const scheduleLines = [];
 
-    tableRows.each((i, row) => {
-      const rowText = $(row)
-        .text()
-        .split('\n')
-        .map(text => text.replace(/ +(?= )/g,'').trim())
-        .slice(1, 6)
-      scheduleLines.push(rowText);
+        tableRows.each((i, row) => {
+          const rowText = $(row)
+            .text()
+            .split('\n')
+            .map(text => text.replace(/ +(?= )/g,'').trim())
+            .slice(1, 6)
+          scheduleLines.push(rowText);
+        });
+
+        // Remove the first line with day names
+        scheduleLines.shift();
+
+        // Walk through the lines and build an object of column value arrays keyed by day
+        const result = scheduleLines.reduce((acc, line) => {
+          DAYS.forEach((day, index) => {
+            const existingValues = acc[day];
+            const newValue = line[index];
+            if (newValue && newValue.trim() !== '') {
+              acc[day] = existingValues ? existingValues.concat([newValue]) : [newValue];
+            }
+          })
+          return acc;
+        }, {});
+
+        resolve(result);
+      });
     });
-
-    // Remove the first line with day names
-    scheduleLines.shift();
-
-    // Walk through the lines and build an object of column value arrays keyed by day
-    return scheduleLines.reduce((acc, line) => {
-      DAYS.forEach((day, index) => {
-        const existingValues = acc[day];
-        const newValue = line[index];
-        if (newValue && newValue.trim() !== '') {
-          acc[day] = existingValues ? existingValues.concat([newValue]) : [newValue];
-        }
-      })
-      return acc;
-    }, {});
-  });
+  })
 }
 
 const getMunicipality = string => {
@@ -156,10 +167,10 @@ const generateEntries = (schedule, garbageType, houseType) => {
 
 const main = async () => {
   const URLS = [
-    'http://okp.si/jsnaga_urniki_odvoza_gospodinjstvo_2020.php',
-    'http://okp.si/jsnaga_urniki_odvoza_BIOgospodinjstva_2020.php',
-    'http://okp.si/jsnaga_urniki_odvoza_vecstanovanjski_2020.php',
-    'http://okp.si/jsnaga_urniki_odvoza_BIOvecstanovanjski_2020.php',
+    'https://okp.si/jsnaga_urniki_odvoza_gospodinjstvo_2020.php',
+    'https://okp.si/jsnaga_urniki_odvoza_BIOgospodinjstva_2020.php',
+    'https://okp.si/jsnaga_urniki_odvoza_vecstanovanjski_2020.php',
+    'https://okp.si/jsnaga_urniki_odvoza_BIOvecstanovanjski_2020.php',
   ];
 
   const schedules = await Promise.all(URLS.map(getScheduleForURL));
@@ -202,7 +213,6 @@ const main = async () => {
       try {
         currentSelection.regular = streetsByMunicipality[e.municipality]['Ostalo'][e.houseType].regular;
       } catch (error) {
-        // debugger
         console.log(e)
       }
     }
