@@ -12,7 +12,7 @@
     "cheerio": "^1.0.0-rc.3",
     "core-js": "^3.4.0",
     "date-fns": "^2.7.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "vue": "^2.6.10",
     "vue-multiselect": "^2.1.6"
   },
