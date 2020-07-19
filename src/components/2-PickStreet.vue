@@ -32,10 +32,11 @@ export default Vue.extend({
   },
   methods: {
     pickStreet(street: string) {
+      // The catch is there to ignore a harmless error about a double redirect.
       this.$router.push({
         name: 'PickBuildingType',
         params: { municipality: this.municipality, street },
-      });
+      }).catch(() => {});
     },
   },
 });

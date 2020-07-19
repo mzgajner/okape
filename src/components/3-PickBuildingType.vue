@@ -49,6 +49,7 @@ export default Vue.extend({
   props: { municipality, street },
   methods: {
     handleSelection(buildingType: string) {
+      // The catch is there to ignore a harmless error about a double redirect.
       this.$router.push({
         name: 'PickStreetPart',
         params: {
@@ -56,7 +57,7 @@ export default Vue.extend({
           street: this.street,
           buildingType,
         },
-      });
+      }).catch(() => {});
     },
   },
 });
