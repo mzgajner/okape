@@ -13,7 +13,7 @@ import Vue from 'vue';
 import { municipality, street, buildingType, pickupDays } from '../routes';
 
 export default Vue.extend({
-  name: 'PickMunicipality',
+  name: 'ShowResults',
   props: { municipality, street, buildingType, pickupDays },
 });
 </script>
