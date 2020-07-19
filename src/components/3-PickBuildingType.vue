@@ -12,32 +12,38 @@ import isEqual from 'lodash/isEqual';
 import isEmpty from 'lodash/isEmpty';
 
 import { schedule } from '../helpers';
+import { Building } from '../types';
 import { municipality, street } from '../routes';
+
+function maybeGetBuildingType(municipality: string, street: string) {
+  // Get schedules for current municipality/street combination
+  const { singleHome, apartmentBuilding } = schedule[municipality][street];
+
+  const equalSchedules = isEqual(singleHome, apartmentBuilding);
+  const emptyApartmentBuildingSchedule =
+    isEmpty(apartmentBuilding.regular) &&
+    isEmpty(apartmentBuilding.organic);
+
+  // If single homes and apartment buildings have the same schedule or if
+  // the latter isn't available, we can safely use single home as building type.
+  if (equalSchedules || emptyApartmentBuildingSchedule) {
+    return Building.SingleHome;
+  }
+}
 
 export default Vue.extend({
   name: 'PickBuildingType',
   beforeRouteEnter(to, from, next) {
     const { municipality, street } = to.params;
+    const buildingType = maybeGetBuildingType(municipality, street);
 
-    // Get schedules for current municipality/street combination
-    const { singleHome, apartmentBuilding } = schedule[municipality][
-      street
-    ];
-
-    const equalSchedules = isEqual(singleHome, apartmentBuilding);
-    const emptyApartmentBuildingSchedule =
-      isEmpty(apartmentBuilding.regular) && isEmpty(apartmentBuilding.organic);
-
-    // If single homes and apartment buildings have the same schedule or if
-    // the latter isn't available, save the user some hassle and redirect
-    // one step ahead
-    if (equalSchedules || emptyApartmentBuildingSchedule) {
-      return next({
+    if (buildingType) {
+      next({
         name: 'PickStreetPart',
-        params: { municipality, street, buildingType: 'singleHome' },
+        params: { municipality, street, buildingType },
       });
     } else {
-      return next();
+      next();
     }
   },
   props: { municipality, street },

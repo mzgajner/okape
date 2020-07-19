@@ -15,38 +15,44 @@
 import Vue from 'vue';
 
 import { schedule } from '../helpers';
-import { Building, Weekday, BuildingSchedule } from '../types';
+import { Building, BuildingSchedule, Weekday } from '../types';
 import { municipality, street, buildingType } from '../routes';
 
-const generateCombinations = (buildingSchedule: BuildingSchedule): string[] => {
-    let { regular, organic } = buildingSchedule;
+function generateCombinations(buildingSchedule: BuildingSchedule): string[] {
+  let { regular, organic } = buildingSchedule;
 
-    if (regular.length === 0) return organic.map((d: Weekday) => `null+${d}`);
-    if (organic.length === 0) return regular.map((d: Weekday) => `${d}+null`);
+  if (regular.length === 0) return organic.map((d: Weekday) => `null+${d}`);
+  if (organic.length === 0) return regular.map((d: Weekday) => `${d}+null`);
 
-    const combinations = [] as string[];
+  const combinations = [] as string[];
 
-    regular.forEach((regularDay: Weekday) => {
-      organic.forEach((organicDay: Weekday) => {
-        combinations.push(`${regularDay}+${organicDay}`);
-      });
+  regular.forEach((regularDay: Weekday) => {
+    organic.forEach((organicDay: Weekday) => {
+      combinations.push(`${regularDay}+${organicDay}`);
     });
+  });
 
-    return combinations;
+  return combinations;
+}
+
+function maybeGetPickupDays(municipality: string, street: string, buildingType: Building) {
+  // Get schedule for current municipality/street/buildingType combination
+  const mySchedule = schedule[municipality][street][buildingType];
+
+  // If there's only one option for a pickup day, just take that as street part.
+  if (mySchedule.regular.length <= 1 && mySchedule.organic.length <= 1) {
+    return generateCombinations(mySchedule)[0];
+  }
 }
 
 export default Vue.extend({
   name: 'PickStreetPart',
+  props: { municipality, street, buildingType },
   beforeRouteEnter(to, from, next) {
     const { municipality, street, buildingType } = to.params;
+    const pickupDays = maybeGetPickupDays(municipality, street, buildingType as Building)
 
-    // Get schedule for current municipality/street/buildingType combination
-    const mySchedule = schedule[municipality][street][buildingType as Building];
-
-    // If there's only one option for a pickup day, save the user some hassle
-    // and redirect one step ahead
-    if (mySchedule.regular.length <= 1 && mySchedule.organic.length <= 1) {
-      const pickupDays = generateCombinations(mySchedule)[0];
+    if (pickupDays) {
       next({
         name: 'ShowResults',
         params: { municipality, street, buildingType, pickupDays },
@@ -55,15 +61,12 @@ export default Vue.extend({
       next();
     }
   },
-  props: { municipality, street, buildingType },
   computed: {
-    buildingSchedule(): BuildingSchedule {
-      return schedule[this.municipality as string][this.street as string][
+    combinations() {
+      const buildingSchedule = schedule[this.municipality as string][this.street as string][
         this.buildingType as Building
       ];
-    },
-    combinations() {
-      return generateCombinations(this.buildingSchedule);
+      return generateCombinations(buildingSchedule);
     },
   },
   methods: {
