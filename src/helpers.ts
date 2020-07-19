@@ -1,20 +1,10 @@
 import { addDays, differenceInDays, formatDistance, formatRelative, getDay, getWeek, startOfToday } from 'date-fns'
 import { sl } from 'date-fns/locale'
-import { Weekday } from './types'
-import { Schedule } from './types';
+
+import { Weekday, Color, Schedule } from './types'
 import scheduleRaw from './schedule.json';
 
 export const schedule = scheduleRaw as Schedule;
-
-enum Color {
-  Red = '#FE7568',
-  Yellow = '#FEE760',
-  Blue = '#5FA1E8',
-  Green = '#5CCC54',
-  Purple = '#C763F2',
-  Brown = '#B56C41',
-  Greenish = '#AAAD3E',
-}
 
 type GarbageType = {
   label: string,

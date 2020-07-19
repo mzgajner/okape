@@ -18,6 +18,16 @@ enum Pickup {
   Organic = 'organic',
 }
 
+export enum Color {
+  Red = '#FE7568',
+  Yellow = '#FEE760',
+  Blue = '#5FA1E8',
+  Green = '#5CCC54',
+  Purple = '#C763F2',
+  Brown = '#B56C41',
+  Greenish = '#AAAD3E',
+}
+
 export type BuildingSchedule = {
   [pickup in Pickup]: Weekday[]
 }
