@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="step-title">
     <h1>Izberi tip stavbe</h1>
     <button @click="pickBuildingType('singleHome')">Hiša</button>
     <button @click="pickBuildingType('apartmentBuilding')">Blok</button>

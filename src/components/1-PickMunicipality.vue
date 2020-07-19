@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Izberi občino</h1>
+    <h1 class="step-title">Izberi občino</h1>
     <vue-multiselect
       :allow-empty="false"
       :options="municipalities"

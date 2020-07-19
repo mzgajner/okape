@@ -18,11 +18,18 @@ body {
   display: flex;
   flex: 1;
   flex-direction: column;
-  font-family: Courier New, Helvetica, Arial, sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
   justify-content: center;
   max-width: 400px;
+  text-align: center;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  height: 18rem;
+  width: 100%;
 }
 
 .logo {
@@ -34,15 +41,16 @@ body {
   margin: 0.5rem 0;
 }
 
-.notice {
-  margin: 1rem 0;
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 li:not(:last-child) {
   margin-bottom: 0.5rem;
 }
 
-.reset-link {
-  /* font-size: 0.75rem; */
-  color: grey;
+.step-title {
+  font-size: 1.5rem;
 }

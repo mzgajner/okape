@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Izberi ulico</h1>
+    <h1 class="step-title">Izberi ulico</h1>
     <vue-multiselect
       :allow-empty="false"
       :options="streets"
