@@ -1,5 +1,5 @@
 import { addDays, differenceInDays, formatDistance, formatRelative, getDay, getWeek, startOfToday } from 'date-fns'
-import { sl } from 'date-fns/locale'
+import sl from 'date-fns/locale/sl'
 
 import { Weekday, Color, Schedule } from './types'
 import scheduleRaw from './schedule.json';

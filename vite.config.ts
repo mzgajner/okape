@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [vue()],
   optimizeDeps: {
     include: [
-      'date-fns/locale'
+      'date-fns/locale/sl',
     ],
   },
 })

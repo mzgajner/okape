@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
 import https from 'https';
 import fs from 'fs';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 const MUNICIPALITIES = [
   'Bistrica ob Sotli',

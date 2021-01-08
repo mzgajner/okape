@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { isEqual, isEmpty } from 'lodash';
+import { isEqual, isEmpty } from 'lodash-es';
 
 import { schedule } from '../helpers';
 import { Building } from '../types';
