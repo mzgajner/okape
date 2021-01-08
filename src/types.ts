@@ -37,9 +37,9 @@ export type StreetSchedule = {
 }
 
 export type MunicipalitySchedule = {
-  [street:string]: StreetSchedule
+  [street: string]: StreetSchedule
 }
 
 export type Schedule = {
-  [municipality:string]: MunicipalitySchedule
+  [municipality: string]: MunicipalitySchedule
 }

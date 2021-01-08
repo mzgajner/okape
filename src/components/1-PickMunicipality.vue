@@ -9,23 +9,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
-import { Schedule } from '../types';
-import { schedule } from "../helpers";
+import { Schedule } from '../types'
+import { schedule } from '../helpers'
 
 export default defineComponent({
   name: 'PickMunicipality',
   computed: {
     municipalities(): string[] {
-      return Object.keys(schedule);
+      return Object.keys(schedule)
     },
   },
   methods: {
     pickMunicipality(event: Event) {
-      const municipality = event.currentTarget.value;
+      const municipality = event.currentTarget.value
       this.$router.push({ name: 'PickStreet', params: { municipality } })
-    }
+    },
   },
-});
+})
 </script>

@@ -1,8 +1,8 @@
-import PickMunicipality from './components/1-PickMunicipality.vue';
-import PickStreet from './components/2-PickStreet.vue';
-import PickBuildingType from './components/3-PickBuildingType.vue';
-import PickStreetPart from './components/4-PickStreetPart.vue';
-import ShowResults from './components/5-ShowResults.vue';
+import PickMunicipality from './components/1-PickMunicipality.vue'
+import PickStreet from './components/2-PickStreet.vue'
+import PickBuildingType from './components/3-PickBuildingType.vue'
+import PickStreetPart from './components/4-PickStreetPart.vue'
+import ShowResults from './components/5-ShowResults.vue'
 
 export default [
   {
@@ -35,4 +35,4 @@ export default [
     props: true,
     name: 'ShowResults',
   },
-];
+]

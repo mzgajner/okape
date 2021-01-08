@@ -10,29 +10,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
-import { schedule } from "../helpers";
-import { municipality } from '../props';
+import { schedule } from '../helpers'
+import { municipality } from '../props'
 
 export default defineComponent({
   name: 'PickStreet',
   props: { municipality },
   computed: {
     streets(): string[] {
-      return Object.keys(schedule[this.municipality]);
+      return Object.keys(schedule[this.municipality])
     },
   },
   methods: {
     pickStreet(event: Event) {
-      const street = event.currentTarget.value;
+      const street = event.currentTarget.value
 
       // The catch is there to ignore a harmless error about a double redirect.
-      this.$router.push({
-        name: 'PickBuildingType',
-        params: { municipality: this.municipality, street },
-      }).catch(() => {});
+      this.$router
+        .push({
+          name: 'PickBuildingType',
+          params: { municipality: this.municipality, street },
+        })
+        .catch(() => {})
     },
   },
-});
+})
 </script>
