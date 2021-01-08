@@ -1,37 +1,32 @@
 <template>
   <div>
     <h1 class="step-title">Izberi ulico</h1>
-    <vue-multiselect
-      :allow-empty="false"
-      :options="streets"
-      :showLabels="false"
-      @input="pickStreet"
-      placeholder="Ulica/Kraj"
-      class="dropdown"
-    />
+
+    <select @input="pickStreet">
+      <option disabled value="">Ulica/Kraj</option>
+      <option v-for="street in streets">{{ street }}</option>
+    </select>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import VueMultiselect from 'vue-multiselect';
+import { defineComponent } from 'vue';
 
 import { schedule } from "../helpers";
-import { municipality } from '../routes';
+import { municipality } from '../props';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'PickStreet',
   props: { municipality },
-  components: {
-    VueMultiselect,
-  },
   computed: {
     streets(): string[] {
       return Object.keys(schedule[this.municipality]);
     },
   },
   methods: {
-    pickStreet(street: string) {
+    pickStreet(event: Event) {
+      const street = event.currentTarget.value;
+
       // The catch is there to ignore a harmless error about a double redirect.
       this.$router.push({
         name: 'PickBuildingType',

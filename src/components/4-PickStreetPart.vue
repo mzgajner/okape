@@ -12,11 +12,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 import { schedule } from '../helpers';
 import { Building, BuildingSchedule, Weekday } from '../types';
-import { municipality, street, buildingType } from '../routes';
+import { municipality, street, buildingType } from '../props';
 
 function generateCombinations(buildingSchedule: BuildingSchedule): string[] {
   let { regular, organic } = buildingSchedule;
@@ -45,7 +45,7 @@ function maybeGetPickupDays(municipality: string, street: string, buildingType: 
   }
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'PickStreetPart',
   props: { municipality, street, buildingType },
   beforeRouteEnter(to, from, next) {

@@ -7,13 +7,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import isEqual from 'lodash/isEqual';
-import isEmpty from 'lodash/isEmpty';
+import { defineComponent } from 'vue';
+import { isEqual, isEmpty } from 'lodash';
 
 import { schedule } from '../helpers';
 import { Building } from '../types';
-import { municipality, street } from '../routes';
+import { municipality, street } from '../props';
 
 function maybeGetBuildingType(municipality: string, street: string) {
   // Get schedules for current municipality/street combination
@@ -31,7 +30,7 @@ function maybeGetBuildingType(municipality: string, street: string) {
   }
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'PickBuildingType',
   beforeRouteEnter(to, from, next) {
     const { municipality, street } = to.params;

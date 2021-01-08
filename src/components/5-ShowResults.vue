@@ -15,11 +15,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { municipality, street, buildingType, pickupDays } from '../routes';
+import { defineComponent } from 'vue';
+import { municipality, street, buildingType, pickupDays } from '../props';
 import { generatePickups } from '../helpers';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ShowResults',
   props: { municipality, street, buildingType, pickupDays },
   computed: {

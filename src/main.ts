@@ -1,18 +1,16 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createApp } from "vue";
+import { createRouter, createWebHashHistory } from "vue-router";
 
-import App from './App.vue';
-import routes from './routes'
+import App from "./App.vue";
+import routes from "./routes";
 
-Vue.config.productionTip = false;
-Vue.use(VueRouter);
-
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHashHistory(),
   routes,
 });
 
-new Vue({
-  router,
-  render: (h) => h(App),
-}).$mount('#app');
+const app = createApp(App)
+app.use(router)
+app.mount("#app")
+
+
