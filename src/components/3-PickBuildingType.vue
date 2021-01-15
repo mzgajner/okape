@@ -15,16 +15,15 @@ import { Building } from '../types'
 import { municipality, street } from '../props'
 
 function maybeGetBuildingType(municipality: string, street: string) {
-  // Get schedules for current municipality/street combination
-  const { singleHome, apartmentBuilding } = schedule[municipality][street]
+  // Get apartment building schedule for current municipality/street combination
+  const apartmentBuilding = schedule[municipality][street].apartmentBuilding
 
-  const equalSchedules = isEqual(singleHome, apartmentBuilding)
   const emptyApartmentBuildingSchedule =
     isEmpty(apartmentBuilding.regular) && isEmpty(apartmentBuilding.organic)
 
-  // If single homes and apartment buildings have the same schedule or if
-  // the latter isn't available, we can safely use single home as building type.
-  if (equalSchedules || emptyApartmentBuildingSchedule) {
+  // If apartment building schedule is empty, auto-select single home as
+  // building type.
+  if (emptyApartmentBuildingSchedule) {
     return Building.SingleHome
   }
 }
@@ -46,7 +45,7 @@ export default defineComponent({
   },
   props: { municipality, street },
   methods: {
-    handleSelection(buildingType: string) {
+    pickBuildingType(buildingType: string) {
       // The catch is there to ignore a harmless error about a double redirect.
       this.$router
         .push({
