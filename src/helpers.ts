@@ -29,37 +29,37 @@ export type Pickup = {
 const packaging: GarbageType = {
   label: 'embalaža',
   color: Color.Yellow,
-  validate: (date: Date) => getWeek(date) % 2 === 0,
+  validate: (date: Date) => getISOWeek(date) % 2 === 1,
 }
 
 const mixed: GarbageType = {
   label: 'mešani odpadki',
   color: Color.Green,
-  validate: (date: Date) => getWeek(date) % 2 === 1,
+  validate: (date: Date) => getISOWeek(date) % 2 === 0,
 }
 
 const paper: GarbageType = {
   label: 'papir',
   color: Color.Blue,
-  validate: (date: Date) => [3, 13, 21, 29, 39, 47].includes(getWeek(date)),
+  validate: (date: Date) => [4, 12, 20, 30, 38, 46].includes(getISOWeek(date)),
 }
 
 const glass: GarbageType = {
   label: 'steklo',
   color: Color.Red,
-  validate: (date: Date) => [7, 17, 25, 35, 43, 51].includes(getWeek(date)),
+  validate: (date: Date) => [8, 16, 24, 34, 42, 50].includes(getISOWeek(date)),
 }
 
 const textile: GarbageType = {
   label: 'tekstil',
   color: Color.Greenish,
-  validate: (date: Date) => [11, 41].includes(getWeek(date)),
+  validate: (date: Date) => [10, 40].includes(getISOWeek(date)),
 }
 
 const electronics: GarbageType = {
   label: 'elektronika',
   color: Color.Purple,
-  validate: (date: Date) => [19, 49].includes(getWeek(date)),
+  validate: (date: Date) => [18, 48].includes(getISOWeek(date)),
 }
 
 const allGarbageTypes: GarbageType[] = [
