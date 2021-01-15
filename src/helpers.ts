@@ -66,7 +66,7 @@ const organic: GarbageType = {
   label: 'biološki odpadki',
   color: Color.Brown,
   validate: (date: Date, building: Building) =>
-    building == Building.ApartmentBuilding
+    building === Building.ApartmentBuilding
       ? true
       : ![1, 3, 5, 7, 9, 46, 48, 50, 52].includes(getISOWeek(date)),
 }
@@ -102,10 +102,15 @@ export function generatePickups(
   organicDay: string,
   building: Building,
 ): Pickup[] {
+  let garbageTypes = allGarbageTypes
   const regularDayNumber = Object.values(Weekday).indexOf(regularDay as Weekday)
   const organicDayNumber = Object.values(Weekday).indexOf(organicDay as Weekday)
 
-  return allGarbageTypes
+  if (organicDay === 'null') {
+    garbageTypes = garbageTypes.slice(0, garbageTypes.length - 1)
+  }
+
+  return garbageTypes
     .map((type) => {
       let date = startOfToday()
       const dayNumber = type === organic ? organicDayNumber : regularDayNumber

@@ -24,7 +24,7 @@ export default defineComponent({
   computed: {
     pickups() {
       const [regularPickupDay, organicPickupDay] = this.pickupDays.split('+')
-      return generatePickups(regularPickupDay, organicPickupDay)
+      return generatePickups(regularPickupDay, organicPickupDay, this.buildingType)
     },
   },
 })
