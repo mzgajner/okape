@@ -4,12 +4,12 @@ import {
   formatDistance,
   formatRelative,
   getDay,
-  getWeek,
+  getISOWeek,
   startOfToday,
 } from 'date-fns'
 import sl from 'date-fns/locale/sl'
 
-import { Weekday, Color, Schedule } from './types'
+import { Weekday, Color, Schedule, Building } from './types'
 import scheduleRaw from './schedule.json'
 
 export const schedule = scheduleRaw as Schedule
@@ -17,7 +17,7 @@ export const schedule = scheduleRaw as Schedule
 type GarbageType = {
   label: string
   color: Color
-  validate(date: Date): boolean
+  validate(date: Date, building?: Building): boolean
 }
 
 export type Pickup = {
@@ -62,6 +62,15 @@ const electronics: GarbageType = {
   validate: (date: Date) => [18, 48].includes(getISOWeek(date)),
 }
 
+const organic: GarbageType = {
+  label: 'biološki odpadki',
+  color: Color.Brown,
+  validate: (date: Date, building: Building) =>
+    building == Building.ApartmentBuilding
+      ? true
+      : ![1, 3, 5, 7, 9, 46, 48, 50, 52].includes(getISOWeek(date)),
+}
+
 const allGarbageTypes: GarbageType[] = [
   packaging,
   mixed,
@@ -69,10 +78,11 @@ const allGarbageTypes: GarbageType[] = [
   glass,
   textile,
   electronics,
+  organic,
 ]
 
-function checkDate(date: Date, day: number, garbageType: GarbageType) {
-  return getDay(date) === day && garbageType.validate(date)
+function checkDate(date: Date, day: number, garbageType: GarbageType, building: Building) {
+  return getDay(date) === day && garbageType.validate(date, building)
 }
 
 function formatDate(date: Date) {
@@ -87,14 +97,20 @@ function formatDate(date: Date) {
   }
 }
 
-export function generatePickups(weekdayName: string): Pickup[] {
-  const weekdayNumber = Object.values(Weekday).indexOf(weekdayName as Weekday)
+export function generatePickups(
+  regularDay: string,
+  organicDay: string,
+  building: Building,
+): Pickup[] {
+  const regularDayNumber = Object.values(Weekday).indexOf(regularDay as Weekday)
+  const organicDayNumber = Object.values(Weekday).indexOf(organicDay as Weekday)
 
   return allGarbageTypes
     .map((type) => {
-      let date = new Date()
+      let date = startOfToday()
+      const dayNumber = type === organic ? organicDayNumber : regularDayNumber
 
-      while (checkDate(date, weekdayNumber, type) !== true) {
+      while (checkDate(date, dayNumber, type, building) !== true) {
         date = addDays(date, 1)
       }
 
