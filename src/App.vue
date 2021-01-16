@@ -7,7 +7,7 @@
         title="Garbage Truck by Karla Design from the Noun Project."
       />
 
-      <router-view class="min-h-64 w-full"></router-view>
+      <router-view class="min-h-64 px-6 w-full"></router-view>
     </div>
   </div>
 </template>
