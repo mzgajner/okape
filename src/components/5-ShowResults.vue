@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <base-title>{{ street }}</base-title>
+  <div class="text-gray-900 text-lg">
+    <base-title class="mb-4">{{ street }}</base-title>
     <ul>
-      <li v-for="pickup in pickups" :key="pickup.type">
-        <span class="day-label" :style="`background: ${pickup.color}`">{{
+      <li v-for="pickup in pickups" :key="pickup.type" class="leading-10">
+        <span :class="`py-1 px-2 rounded-md ${pickup.color}`">{{
           pickup.type
         }}</span>
-        - {{ pickup.time }}
+        {{ pickup.time }}
       </li>
     </ul>
   </div>
@@ -33,9 +33,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-.day-label {
-  padding: 0 4px;
-}
-</style>

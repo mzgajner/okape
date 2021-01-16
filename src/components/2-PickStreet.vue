@@ -1,8 +1,7 @@
 <template>
   <div>
-    <base-title>Izberi ulico oz. kraj</base-title>
+    <base-title class="mb-4">Izberi ulico oz. kraj</base-title>
     <base-select
-      class="mt-4"
       @select="pickStreet"
       :options="streets"
       placeholder="Ulica/Kraj"

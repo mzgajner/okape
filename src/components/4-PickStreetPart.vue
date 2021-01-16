@@ -1,13 +1,13 @@
 <template>
   <div>
-    <base-title>Izberi del ulice</base-title>
-    <button
+    <base-title class="mb-4">Izberi del ulice</base-title>
+    <base-button
       v-for="(pickupDays, index) in combinations"
       :key="pickupDays"
       @click="pickStreetPart(pickupDays)"
     >
       {{ index + 1 }}. del
-    </button>
+    </base-button>
   </div>
 </template>
 
@@ -94,5 +94,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style lang="scss" scoped></style>

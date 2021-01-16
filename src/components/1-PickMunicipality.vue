@@ -1,8 +1,7 @@
 <template>
   <div>
-    <base-title>Izberi občino</base-title>
+    <base-title class="mb-4">Izberi občino</base-title>
     <base-select
-      class="mt-4"
       @select="pickMunicipality"
       :options="municipalities"
       placeholder="Občina"

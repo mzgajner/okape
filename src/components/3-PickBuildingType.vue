@@ -1,8 +1,11 @@
 <template>
   <div>
-    <base-title>Izberi tip stavbe</base-title>
-    <button @click="pickBuildingType('singleHome')">Hiša</button>
-    <button @click="pickBuildingType('apartmentBuilding')">Blok</button>
+    <base-title class="mb-4">Izberi tip stavbe</base-title>
+    <base-button @click="pickBuildingType('singleHome')">Hiša</base-button>
+    <base-button @click="pickBuildingType('apartmentBuilding')" class="ml-4">
+      Blok
+    </base-button
+    >
   </div>
 </template>
 
@@ -13,6 +16,7 @@ import { isEqual, isEmpty } from 'lodash-es'
 import { schedule } from '../helpers'
 import { Building } from '../types'
 import { municipality, street } from '../props'
+import BaseButton from './BaseButton.vue'
 import BaseTitle from './BaseTitle.vue'
 
 function maybeGetBuildingType(municipality: string, street: string) {
@@ -30,7 +34,10 @@ function maybeGetBuildingType(municipality: string, street: string) {
 }
 
 export default defineComponent({
-  components: { BaseTitle },
+  components: {
+    BaseButton,
+    BaseTitle,
+  },
   beforeRouteEnter(to, from, next) {
     const { municipality, street } = to.params
     const buildingType = maybeGetBuildingType(municipality, street)
