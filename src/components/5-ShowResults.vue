@@ -1,12 +1,12 @@
 <template>
-  <div class="text-gray-900 text-lg">
+  <div class="text-lg">
     <base-title class="mb-4">{{ street }}</base-title>
     <ul>
       <li v-for="pickup in pickups" :key="pickup.type" class="leading-10">
-        <span :class="`py-1 px-2 rounded-md ${pickup.color}`">{{
-          pickup.type
-        }}</span>
-        {{ pickup.time }}
+        <span :class="`py-1 px-2 text-gray-900 rounded-md ${pickup.color}`">
+          {{ pickup.type }}
+        </span>
+        <span class="text-purple-900">&nbsp;{{ pickup.time }}</span>
       </li>
     </ul>
   </div>
