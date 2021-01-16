@@ -4,6 +4,7 @@
     <base-button
       v-for="(pickupDays, index) in combinations"
       :key="pickupDays"
+      :class="index !== 0 ? 'ml-4' : ''"
       @click="pickStreetPart(pickupDays)"
     >
       {{ index + 1 }}. del
@@ -17,6 +18,7 @@ import { defineComponent } from 'vue'
 import { schedule } from '../helpers'
 import { Building, BuildingSchedule, Weekday } from '../types'
 import { municipality, street, buildingType } from '../props'
+import BaseButton from './BaseButton.vue'
 import BaseTitle from './BaseTitle.vue'
 
 function generateCombinations(buildingSchedule: BuildingSchedule): string[] {
@@ -51,7 +53,10 @@ function maybeGetPickupDays(
 }
 
 export default defineComponent({
-  components: { BaseTitle },
+  components: {
+    BaseButton,
+    BaseTitle,
+  },
   props: { municipality, street, buildingType },
   beforeRouteEnter(to, from, next) {
     const { municipality, street, buildingType } = to.params
