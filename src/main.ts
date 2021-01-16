@@ -4,6 +4,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import App from './App.vue'
 import routes from './routes'
 
+import 'tailwindcss/tailwind.css'
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
