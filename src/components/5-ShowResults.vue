@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1 class="step-title">{{ street }}</h1>
-
+    <base-title>{{ street }}</base-title>
     <ul>
       <li v-for="pickup in pickups" :key="pickup.type">
         <span class="day-label" :style="`background: ${pickup.color}`">{{
@@ -17,14 +16,19 @@
 import { defineComponent } from 'vue'
 import { municipality, street, buildingType, pickupDays } from '../props'
 import { generatePickups } from '../helpers'
+import BaseTitle from './BaseTitle.vue'
 
 export default defineComponent({
-  name: 'ShowResults',
+  components: { BaseTitle },
   props: { municipality, street, buildingType, pickupDays },
   computed: {
     pickups() {
       const [regularPickupDay, organicPickupDay] = this.pickupDays.split('+')
-      return generatePickups(regularPickupDay, organicPickupDay, this.buildingType)
+      return generatePickups(
+        regularPickupDay,
+        organicPickupDay,
+        this.buildingType
+      )
     },
   },
 })

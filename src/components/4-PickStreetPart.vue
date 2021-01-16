@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Izberi del ulice</h1>
+    <base-title>Izberi del ulice</base-title>
     <button
       v-for="(pickupDays, index) in combinations"
       :key="pickupDays"
@@ -17,6 +17,7 @@ import { defineComponent } from 'vue'
 import { schedule } from '../helpers'
 import { Building, BuildingSchedule, Weekday } from '../types'
 import { municipality, street, buildingType } from '../props'
+import BaseTitle from './BaseTitle.vue'
 
 function generateCombinations(buildingSchedule: BuildingSchedule): string[] {
   let { regular, organic } = buildingSchedule
@@ -50,7 +51,7 @@ function maybeGetPickupDays(
 }
 
 export default defineComponent({
-  name: 'PickStreetPart',
+  components: { BaseTitle },
   props: { municipality, street, buildingType },
   beforeRouteEnter(to, from, next) {
     const { municipality, street, buildingType } = to.params

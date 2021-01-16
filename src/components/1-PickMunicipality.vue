@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="step-title">Izberi občino</h1>
+    <base-title>Izberi občino</base-title>
     <select @input="pickMunicipality">
       <option disabled value="" selected>Občina</option>
       <option v-for="municipality in municipalities">{{ municipality }}</option>
@@ -13,9 +13,10 @@ import { defineComponent } from 'vue'
 
 import { Schedule } from '../types'
 import { schedule } from '../helpers'
+import BaseTitle from './BaseTitle.vue'
 
 export default defineComponent({
-  name: 'PickMunicipality',
+  components: { BaseTitle },
   computed: {
     municipalities(): string[] {
       return Object.keys(schedule)
