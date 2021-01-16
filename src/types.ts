@@ -19,13 +19,13 @@ enum Pickup {
 }
 
 export enum Color {
-  Red = '#FE7568',
-  Yellow = '#FEE760',
-  Blue = '#5FA1E8',
-  Green = '#5CCC54',
-  Purple = '#C763F2',
-  Brown = '#D09C7D',
-  Greenish = '#AAAD3E',
+  Red = 'bg-red-400',
+  Yellow = 'bg-yellow-300',
+  Blue = 'bg-blue-400',
+  Green = 'bg-green-400',
+  Purple = 'bg-purple-300',
+  Brown = 'bg-yellow-900 bg-opacity-50',
+  Greenish = 'bg-green-900 bg-opacity-50',
 }
 
 export type BuildingSchedule = {
