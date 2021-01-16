@@ -2,7 +2,7 @@
   <div>
     <h1 class="step-title">Izberi občino</h1>
     <select @input="pickMunicipality">
-      <option disabled value="">Občina</option>
+      <option disabled value="" selected>Občina</option>
       <option v-for="municipality in municipalities">{{ municipality }}</option>
     </select>
   </div>

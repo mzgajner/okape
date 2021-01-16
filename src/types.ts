@@ -24,7 +24,7 @@ export enum Color {
   Blue = '#5FA1E8',
   Green = '#5CCC54',
   Purple = '#C763F2',
-  Brown = '#B56C41',
+  Brown = '#D09C7D',
   Greenish = '#AAAD3E',
 }
 

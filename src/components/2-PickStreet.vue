@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h1 class="step-title">Izberi ulico</h1>
+    <h1 class="step-title">Izberi ulico oz. kraj</h1>
 
     <select @input="pickStreet">
-      <option disabled value="">Ulica/Kraj</option>
+      <option disabled value="" selected>Ulica/Kraj</option>
       <option v-for="street in streets">{{ street }}</option>
     </select>
   </div>
