@@ -1,10 +1,12 @@
 <template>
   <div>
     <base-title>Izberi občino</base-title>
-    <select @input="pickMunicipality">
-      <option disabled value="" selected>Občina</option>
-      <option v-for="municipality in municipalities">{{ municipality }}</option>
-    </select>
+    <base-select
+      class="mt-4"
+      @select="pickMunicipality"
+      :options="municipalities"
+      placeholder="Občina"
+    />
   </div>
 </template>
 
@@ -13,18 +15,21 @@ import { defineComponent } from 'vue'
 
 import { Schedule } from '../types'
 import { schedule } from '../helpers'
+import BaseSelect from './BaseSelect.vue'
 import BaseTitle from './BaseTitle.vue'
 
 export default defineComponent({
-  components: { BaseTitle },
+  components: {
+    BaseSelect,
+    BaseTitle,
+  },
   computed: {
     municipalities(): string[] {
       return Object.keys(schedule)
     },
   },
   methods: {
-    pickMunicipality(event: Event) {
-      const municipality = event.currentTarget.value
+    pickMunicipality(municipality: string) {
       this.$router.push({ name: 'PickStreet', params: { municipality } })
     },
   },

@@ -1,7 +1,9 @@
 <template>
-  <base-title>Izberi tip stavbe</base-title>
-  <button @click="pickBuildingType('singleHome')">Hiša</button>
-  <button @click="pickBuildingType('apartmentBuilding')">Blok</button>
+  <div>
+    <base-title>Izberi tip stavbe</base-title>
+    <button @click="pickBuildingType('singleHome')">Hiša</button>
+    <button @click="pickBuildingType('apartmentBuilding')">Blok</button>
+  </div>
 </template>
 
 <script lang="ts">

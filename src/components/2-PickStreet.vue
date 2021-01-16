@@ -1,11 +1,12 @@
 <template>
   <div>
     <base-title>Izberi ulico oz. kraj</base-title>
-
-    <select @input="pickStreet">
-      <option disabled value="" selected>Ulica/Kraj</option>
-      <option v-for="street in streets">{{ street }}</option>
-    </select>
+    <base-select
+      class="mt-4"
+      @select="pickStreet"
+      :options="streets"
+      placeholder="Ulica/Kraj"
+    />
   </div>
 </template>
 
@@ -14,20 +15,22 @@ import { defineComponent } from 'vue'
 
 import { schedule } from '../helpers'
 import { municipality } from '../props'
+import BaseSelect from './BaseSelect.vue'
 import BaseTitle from './BaseTitle.vue'
 
 export default defineComponent({
   props: { municipality },
-  components: { BaseTitle },
+  components: {
+    BaseSelect,
+    BaseTitle,
+  },
   computed: {
     streets(): string[] {
       return Object.keys(schedule[this.municipality])
     },
   },
   methods: {
-    pickStreet(event: Event) {
-      const street = event.currentTarget.value
-
+    pickStreet(street: string) {
       // The catch is there to ignore a harmless error about a double redirect.
       this.$router
         .push({
