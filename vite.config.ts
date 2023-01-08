@@ -4,8 +4,6 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   optimizeDeps: {
-    include: [
-      'date-fns/locale/sl',
-    ],
+    include: ['date-fns/locale/sl'],
   },
 })

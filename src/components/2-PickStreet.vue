@@ -1,7 +1,7 @@
 <template>
   <div>
-    <base-title class="mb-4">Izberi ulico oz. kraj</base-title>
-    <base-select
+    <BaseTitle class="mb-4">Izberi ulico oz. kraj</BaseTitle>
+    <BaseSelect
       @select="pickStreet"
       :options="streets"
       placeholder="Ulica/Kraj"
@@ -9,35 +9,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import { useRouter } from 'vue-router'
 
 import { schedule } from '../helpers'
-import { municipality } from '../props'
 import BaseSelect from './BaseSelect.vue'
 import BaseTitle from './BaseTitle.vue'
 
-export default defineComponent({
-  props: { municipality },
-  components: {
-    BaseSelect,
-    BaseTitle,
-  },
-  computed: {
-    streets(): string[] {
-      return Object.keys(schedule[this.municipality])
-    },
-  },
-  methods: {
-    pickStreet(street: string) {
-      // The catch is there to ignore a harmless error about a double redirect.
-      this.$router
-        .push({
-          name: 'PickBuildingType',
-          params: { municipality: this.municipality, street },
-        })
-        .catch(() => {})
-    },
-  },
-})
+const props = defineProps<{ municipality: string }>()
+const router = useRouter()
+const streets = Object.keys(schedule[props.municipality])
+const pickStreet = (street: string) =>
+  router.push({
+    name: 'PickBuildingType',
+    params: { municipality: props.municipality, street },
+  })
 </script>

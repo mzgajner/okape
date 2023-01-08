@@ -12,24 +12,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { municipality, street, buildingType, pickupDays } from '../props'
+<script lang="ts" setup>
 import { generatePickups } from '../helpers'
 import BaseTitle from './BaseTitle.vue'
+import { computed } from 'vue'
+import { Building } from '../types'
 
-export default defineComponent({
-  components: { BaseTitle },
-  props: { municipality, street, buildingType, pickupDays },
-  computed: {
-    pickups() {
-      const [regularPickupDay, organicPickupDay] = this.pickupDays.split('+')
-      return generatePickups(
-        regularPickupDay,
-        organicPickupDay,
-        this.buildingType
-      )
-    },
-  },
+const props = defineProps<{
+  municipality: string
+  street: string
+  buildingType: Building
+  pickupDays: string
+}>()
+const pickups = computed(() => {
+  const [regularPickupDay, organicPickupDay] = props.pickupDays.split('+')
+  return generatePickups(regularPickupDay, organicPickupDay, props.buildingType)
 })
 </script>

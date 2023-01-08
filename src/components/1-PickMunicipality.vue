@@ -1,7 +1,7 @@
 <template>
   <div>
-    <base-title class="mb-4">Izberi občino</base-title>
-    <base-select
+    <BaseTitle class="mb-4">Izberi občino</BaseTitle>
+    <BaseSelect
       @select="pickMunicipality"
       :options="municipalities"
       placeholder="Občina"
@@ -9,28 +9,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import { useRouter } from 'vue-router'
 
-import { Schedule } from '../types'
 import { schedule } from '../helpers'
 import BaseSelect from './BaseSelect.vue'
 import BaseTitle from './BaseTitle.vue'
 
-export default defineComponent({
-  components: {
-    BaseSelect,
-    BaseTitle,
-  },
-  computed: {
-    municipalities(): string[] {
-      return Object.keys(schedule)
-    },
-  },
-  methods: {
-    pickMunicipality(municipality: string) {
-      this.$router.push({ name: 'PickStreet', params: { municipality } })
-    },
-  },
-})
+const router = useRouter()
+const municipalities = Object.keys(schedule)
+const pickMunicipality = (municipality: string) => {
+  router.push({ name: 'PickStreet', params: { municipality } })
+}
 </script>

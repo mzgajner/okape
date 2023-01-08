@@ -9,8 +9,9 @@ import {
 } from 'date-fns'
 import sl from 'date-fns/locale/sl'
 
-import { Weekday, Color, Schedule, Building } from './types'
+import { Weekday, Color, Schedule, Building, BuildingSchedule } from './types'
 import scheduleRaw from './schedule.json'
+import { isEqual, isEmpty } from 'lodash-es'
 
 export const schedule = scheduleRaw as Schedule
 
@@ -128,4 +129,51 @@ export function generatePickups(
     })
     .sort((a, b) => Number(a.time) - Number(b.time))
     .map((day) => ({ ...day, time: formatDate(day.time) }))
+}
+
+export const maybeGetBuildingType = (municipality: string, street: string) => {
+  // Get apartment building schedule for current municipality/street combination
+  const apartmentBuilding = schedule[municipality][street].apartmentBuilding
+
+  const emptyApartmentBuildingSchedule =
+    isEmpty(apartmentBuilding.regular) && isEmpty(apartmentBuilding.organic)
+
+  // If apartment building schedule is empty, auto-select single home as
+  // building type.
+  if (emptyApartmentBuildingSchedule) {
+    return Building.SingleHome
+  }
+}
+
+export const generateCombinations = (
+  buildingSchedule: BuildingSchedule
+): string[] => {
+  let { regular, organic } = buildingSchedule
+
+  if (regular.length === 0) return organic.map((d: Weekday) => `null+${d}`)
+  if (organic.length === 0) return regular.map((d: Weekday) => `${d}+null`)
+
+  const combinations = [] as string[]
+
+  regular.forEach((regularDay: Weekday) => {
+    organic.forEach((organicDay: Weekday) => {
+      combinations.push(`${regularDay}+${organicDay}`)
+    })
+  })
+
+  return combinations
+}
+
+export const maybeGetPickupDays = (
+  municipality: string,
+  street: string,
+  buildingType: Building
+) => {
+  // Get schedule for current municipality/street/buildingType combination
+  const mySchedule = schedule[municipality][street][buildingType]
+
+  // If there's only one option for a pickup day, just take that as street part.
+  if (mySchedule.regular.length <= 1 && mySchedule.organic.length <= 1) {
+    return generateCombinations(mySchedule)[0]
+  }
 }
