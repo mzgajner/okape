@@ -18,6 +18,15 @@ enum Pickup {
   Organic = 'organic',
 }
 
+export enum Municipality {
+  Bistrica = 'Bistrica ob Sotli',
+  Kozje = 'Kozje',
+  Podcetrtek = 'Podčetrtek',
+  Rogaska = 'Rogaška Slatina',
+  Rogatec = 'Rogatec',
+  Smarje = 'Šmarje pri Jelšah',
+}
+
 export enum Color {
   Red = 'bg-red-400',
   Yellow = 'bg-yellow-300',

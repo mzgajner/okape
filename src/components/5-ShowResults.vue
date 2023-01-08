@@ -16,16 +16,21 @@
 import { generatePickups } from '../helpers'
 import BaseTitle from './BaseTitle.vue'
 import { computed } from 'vue'
-import { Building } from '../types'
+import { Building, Municipality } from '../types'
 
 const props = defineProps<{
-  municipality: string
+  municipality: Municipality
   street: string
   buildingType: Building
   pickupDays: string
 }>()
 const pickups = computed(() => {
   const [regularPickupDay, organicPickupDay] = props.pickupDays.split('+')
-  return generatePickups(regularPickupDay, organicPickupDay, props.buildingType)
+  return generatePickups(
+    regularPickupDay,
+    organicPickupDay,
+    props.buildingType,
+    props.municipality
+  )
 })
 </script>

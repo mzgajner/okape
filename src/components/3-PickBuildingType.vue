@@ -1,13 +1,8 @@
 <template>
   <div>
     <BaseTitle class="mb-4">Izberi tip stavbe</BaseTitle>
-    <BaseButton @click="pickBuildingType('singleHome')">
-      Hiša
-    </BaseButton>
-    <BaseButton
-      class="ml-4"
-      @click="pickBuildingType('apartmentBuilding')"
-    >
+    <BaseButton @click="pickBuildingType('singleHome')"> Hiša </BaseButton>
+    <BaseButton class="ml-4" @click="pickBuildingType('apartmentBuilding')">
       Blok
     </BaseButton>
   </div>

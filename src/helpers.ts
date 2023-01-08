@@ -9,16 +9,23 @@ import {
 } from 'date-fns'
 import sl from 'date-fns/locale/sl'
 
-import { Weekday, Color, Schedule, Building, BuildingSchedule } from './types'
+import {
+  Weekday,
+  Color,
+  Schedule,
+  Building,
+  BuildingSchedule,
+  Municipality,
+} from './types'
 import scheduleRaw from './schedule.json'
-import { isEqual, isEmpty } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 
 export const schedule = scheduleRaw as Schedule
 
 type GarbageType = {
   label: string
   color: Color
-  validate(date: Date, building?: Building): boolean
+  validate(date: Date, building: Building, municipality: Municipality): boolean
 }
 
 export type Pickup = {
@@ -42,25 +49,47 @@ const mixed: GarbageType = {
 const paper: GarbageType = {
   label: 'papir',
   color: Color.Blue,
-  validate: (date: Date) => [4, 12, 20, 30, 38, 46].includes(getISOWeek(date)),
+  validate: (date, building, municipality) => {
+    if (building === Building.ApartmentBuilding) return true
+    const weeks = {
+      [Municipality.Rogaska]: [1, 10, 18, 27, 36, 45],
+      [Municipality.Smarje]: [2, 11, 19, 28, 37, 46],
+      [Municipality.Podcetrtek]: [3, 12, 20, 29, 38, 47],
+      [Municipality.Kozje]: [4, 13, 21, 30, 39, 48],
+      [Municipality.Rogatec]: [3, 12, 20, 29, 38, 47], // Same as Podcetrtek
+      [Municipality.Bistrica]: [4, 13, 21, 30, 39, 48], // Same as Kozje
+    }[municipality]
+    return weeks.includes(getISOWeek(date))
+  },
 }
 
 const glass: GarbageType = {
   label: 'steklo',
   color: Color.Red,
-  validate: (date: Date) => [8, 16, 24, 34, 42, 50].includes(getISOWeek(date)),
+  validate: (date, building, municipality) => {
+    if (building === Building.ApartmentBuilding) return true
+    const weeks = {
+      [Municipality.Rogaska]: [5, 14, 23, 31, 40, 49],
+      [Municipality.Smarje]: [6, 15, 24, 32, 41, 50],
+      [Municipality.Podcetrtek]: [7, 16, 25, 33, 42, 51],
+      [Municipality.Kozje]: [8, 17, 26, 34, 43, 52],
+      [Municipality.Rogatec]: [7, 16, 25, 33, 42, 51], // Same as Podcetrtek
+      [Municipality.Bistrica]: [8, 17, 26, 34, 43, 52], // Same as Kozje
+    }[municipality]
+    return weeks.includes(getISOWeek(date))
+  },
 }
 
 const textile: GarbageType = {
   label: 'tekstil',
   color: Color.Greenish,
-  validate: (date: Date) => [10, 40].includes(getISOWeek(date)),
+  validate: (date: Date) => [9, 35].includes(getISOWeek(date)),
 }
 
 const electronics: GarbageType = {
   label: 'elektronika',
   color: Color.Purple,
-  validate: (date: Date) => [18, 48].includes(getISOWeek(date)),
+  validate: (date: Date) => [22, 44].includes(getISOWeek(date)),
 }
 
 const organic: GarbageType = {
@@ -69,7 +98,7 @@ const organic: GarbageType = {
   validate: (date: Date, building: Building) =>
     building === Building.ApartmentBuilding
       ? true
-      : ![1, 3, 5, 7, 9, 46, 48, 50, 52].includes(getISOWeek(date)),
+      : ![2, 4, 6, 8, 10, 46, 48, 50, 52].includes(getISOWeek(date)),
 }
 
 const allGarbageTypes: GarbageType[] = [
@@ -86,9 +115,12 @@ function checkDate(
   date: Date,
   day: number,
   garbageType: GarbageType,
-  building: Building
+  building: Building,
+  municipality: Municipality
 ) {
-  return getDay(date) === day && garbageType.validate(date, building)
+  return (
+    getDay(date) === day && garbageType.validate(date, building, municipality)
+  )
 }
 
 function formatDate(date: Date) {
@@ -106,7 +138,8 @@ function formatDate(date: Date) {
 export function generatePickups(
   regularDay: string,
   organicDay: string,
-  building: Building
+  building: Building,
+  municipality: Municipality
 ): Pickup[] {
   let garbageTypes = allGarbageTypes
   const regularDayNumber = Object.values(Weekday).indexOf(regularDay as Weekday)
@@ -119,9 +152,16 @@ export function generatePickups(
   return garbageTypes
     .map((type) => {
       let date = startOfToday()
-      const dayNumber = type === organic ? organicDayNumber : regularDayNumber
+      let dayNumber = type === organic ? organicDayNumber : regularDayNumber
 
-      while (checkDate(date, dayNumber, type, building) !== true) {
+      if (building === Building.ApartmentBuilding) {
+        if (type.label === 'papir') dayNumber = 4
+        else if (type.label === 'steklo') dayNumber = 3
+      }
+
+      while (
+        checkDate(date, dayNumber, type, building, municipality) !== true
+      ) {
         date = addDays(date, 1)
       }
 
