@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "npx prettier --write '**/*.{vue,ts}'"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",

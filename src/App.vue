@@ -1,6 +1,8 @@
 <template>
   <div class="flex bg-purple-50">
-    <div class="flex items-center flex-col justify-center w-96 max-w-full h-screen mx-auto text-center ">
+    <div
+      class="flex items-center flex-col justify-center w-96 max-w-full h-screen mx-auto text-center"
+    >
       <img
         class="m-4 w-28"
         src="./assets/garbage_truck.svg"

@@ -81,7 +81,12 @@ const allGarbageTypes: GarbageType[] = [
   organic,
 ]
 
-function checkDate(date: Date, day: number, garbageType: GarbageType, building: Building) {
+function checkDate(
+  date: Date,
+  day: number,
+  garbageType: GarbageType,
+  building: Building
+) {
   return getDay(date) === day && garbageType.validate(date, building)
 }
 
@@ -100,7 +105,7 @@ function formatDate(date: Date) {
 export function generatePickups(
   regularDay: string,
   organicDay: string,
-  building: Building,
+  building: Building
 ): Pickup[] {
   let garbageTypes = allGarbageTypes
   const regularDayNumber = Object.values(Weekday).indexOf(regularDay as Weekday)
