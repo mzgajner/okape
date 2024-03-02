@@ -7,7 +7,7 @@ import {
   getISOWeek,
   startOfToday,
 } from 'date-fns'
-import sl from 'date-fns/locale/sl'
+import { sl } from 'date-fns/locale'
 
 import {
   Weekday,
@@ -116,7 +116,7 @@ function checkDate(
   day: number,
   garbageType: GarbageType,
   building: Building,
-  municipality: Municipality
+  municipality: Municipality,
 ) {
   return (
     getDay(date) === day && garbageType.validate(date, building, municipality)
@@ -139,7 +139,7 @@ export function generatePickups(
   regularDay: string,
   organicDay: string,
   building: Building,
-  municipality: Municipality
+  municipality: Municipality,
 ): Pickup[] {
   let garbageTypes = allGarbageTypes
   const regularDayNumber = Object.values(Weekday).indexOf(regularDay as Weekday)
@@ -186,7 +186,7 @@ export const maybeGetBuildingType = (municipality: string, street: string) => {
 }
 
 export const generateCombinations = (
-  buildingSchedule: BuildingSchedule
+  buildingSchedule: BuildingSchedule,
 ): string[] => {
   let { regular, organic } = buildingSchedule
 
@@ -207,7 +207,7 @@ export const generateCombinations = (
 export const maybeGetPickupDays = (
   municipality: string,
   street: string,
-  buildingType: Building
+  buildingType: Building,
 ) => {
   // Get schedule for current municipality/street/buildingType combination
   const mySchedule = schedule[municipality][street][buildingType]

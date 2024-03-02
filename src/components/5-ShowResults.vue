@@ -30,7 +30,7 @@ const pickups = computed(() => {
     regularPickupDay,
     organicPickupDay,
     props.buildingType,
-    props.municipality
+    props.municipality,
   )
 })
 </script>

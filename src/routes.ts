@@ -30,7 +30,7 @@ export default <RouteRecordRaw[]>[
       const { municipality, street } = to.params
       const buildingType = maybeGetBuildingType(
         municipality.toString(),
-        street.toString()
+        street.toString(),
       )
 
       if (buildingType) {
@@ -51,7 +51,7 @@ export default <RouteRecordRaw[]>[
       const pickupDays = maybeGetPickupDays(
         municipality.toString(),
         street.toString(),
-        buildingType as Building
+        buildingType as Building,
       )
 
       if (pickupDays) {
