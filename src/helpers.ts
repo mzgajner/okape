@@ -69,12 +69,12 @@ const glass: GarbageType = {
   validate: (date, building, municipality) => {
     if (building === Building.ApartmentBuilding) return true
     const weeks = {
-      [Municipality.Rogaska]: [5, 14, 23, 31, 40, 49],
-      [Municipality.Smarje]: [6, 15, 24, 32, 41, 50],
-      [Municipality.Podcetrtek]: [7, 16, 25, 33, 42, 51],
-      [Municipality.Kozje]: [8, 17, 26, 34, 43, 52],
-      [Municipality.Rogatec]: [7, 16, 25, 33, 42, 51], // Same as Podcetrtek
-      [Municipality.Bistrica]: [8, 17, 26, 34, 43, 52], // Same as Kozje
+      [Municipality.Rogaska]: [5, 14, 23, 31, 41, 49],
+      [Municipality.Smarje]: [6, 15, 24, 32, 42, 50],
+      [Municipality.Podcetrtek]: [7, 16, 25, 33, 43, 51],
+      [Municipality.Kozje]: [8, 17, 26, 34, 44, 52],
+      [Municipality.Rogatec]: [7, 16, 25, 33, 43, 51], // Same as Podcetrtek
+      [Municipality.Bistrica]: [8, 17, 26, 34, 44, 52], // Same as Kozje
     }[municipality]
     return weeks.includes(getISOWeek(date))
   },
@@ -89,7 +89,7 @@ const textile: GarbageType = {
 const electronics: GarbageType = {
   label: 'elektronika',
   color: Color.Purple,
-  validate: (date: Date) => [22, 44].includes(getISOWeek(date)),
+  validate: (date: Date) => [22, 40].includes(getISOWeek(date)),
 }
 
 const organic: GarbageType = {
@@ -98,7 +98,7 @@ const organic: GarbageType = {
   validate: (date: Date, building: Building) =>
     building === Building.ApartmentBuilding
       ? true
-      : ![2, 4, 6, 8, 10, 46, 48, 50, 52].includes(getISOWeek(date)),
+      : ![2, 4, 6, 8, 10, 47, 49, 51, 53].includes(getISOWeek(date)),
 }
 
 const allGarbageTypes: GarbageType[] = [
