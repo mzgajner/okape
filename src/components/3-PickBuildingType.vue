@@ -14,7 +14,9 @@ import BaseButton from './BaseButton.vue'
 import BaseTitle from './BaseTitle.vue'
 
 const props = defineProps<{ municipality: string; street: string }>()
+
 const router = useRouter()
+
 const pickBuildingType = (buildingType: string) => {
   router.push({
     name: 'PickStreetPart',

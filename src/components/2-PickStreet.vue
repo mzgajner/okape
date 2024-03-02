@@ -17,8 +17,11 @@ import BaseSelect from './BaseSelect.vue'
 import BaseTitle from './BaseTitle.vue'
 
 const props = defineProps<{ municipality: string }>()
+
 const router = useRouter()
+
 const streets = Object.keys(schedule[props.municipality])
+
 const pickStreet = (street: string) =>
   router.push({
     name: 'PickBuildingType',

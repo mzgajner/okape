@@ -17,7 +17,9 @@ import BaseSelect from './BaseSelect.vue'
 import BaseTitle from './BaseTitle.vue'
 
 const router = useRouter()
+
 const municipalities = Object.keys(schedule)
+
 const pickMunicipality = (municipality: string) => {
   router.push({ name: 'PickStreet', params: { municipality } })
 }

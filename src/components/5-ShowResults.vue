@@ -24,6 +24,7 @@ const props = defineProps<{
   buildingType: Building
   pickupDays: string
 }>()
+
 const pickups = computed(() => {
   const [regularPickupDay, organicPickupDay] = props.pickupDays.split('+')
   return generatePickups(

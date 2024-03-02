@@ -29,6 +29,7 @@ const props = defineProps<{
 }>()
 
 const router = useRouter()
+
 const combinations = computed(() => {
   const buildingSchedule =
     schedule[props.municipality][props.street][props.buildingType]
