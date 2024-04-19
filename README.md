@@ -4,16 +4,16 @@ A simple webapp to find out when the garbage is being picked up if you don't fin
 ## Development commands
 ```bash
 # Setup project
-yarn install
+bun install
 
 # Compiles and hot-reload for development
-yarn run serve
+bun run dev
 
 # Compile and minify for production
-yarn run build
+bun run build
 
 # Lint and fix files
-yarn run lint
+bun run lint
 ```
 
 ## Parser
