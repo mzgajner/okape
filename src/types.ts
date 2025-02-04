@@ -33,8 +33,8 @@ export enum Color {
   Blue = 'bg-blue-400',
   Green = 'bg-green-400',
   Purple = 'bg-purple-300',
-  Brown = 'bg-yellow-900 bg-opacity-50',
-  Greenish = 'bg-green-900 bg-opacity-50',
+  Brown = 'bg-yellow-900 text-white',
+  Greenish = 'bg-green-900 text-white',
 }
 
 export type BuildingSchedule = {

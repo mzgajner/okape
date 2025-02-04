@@ -13,3 +13,7 @@
     </div>
   </div>
 </template>
+
+<style>
+@import 'tailwindcss';
+</style>
