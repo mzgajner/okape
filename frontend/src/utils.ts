@@ -32,10 +32,21 @@ export function downloadCalendar(pickups: PickupEntry[]) {
         title: `Odvoz - ${label}`,
         start: [y, m, d] as [number, number, number],
         duration: { days: 1 },
+        uid: `${p.date}-${p.type}@okape`,
+        alarms: [
+          {
+            action: 'display' as const,
+            trigger: { hours: 6, minutes: 0, before: true },
+            description: `Jutri odvoz: ${label}`,
+          },
+        ],
       }
     })
 
-  const { value } = createEvents(events)
+  const { value } = createEvents(events, {
+    calName: 'Odvoz odpadkov',
+    productId: 'mzgajner/okape',
+  })
   if (!value) return
 
   const blob = new Blob([value], { type: 'text/calendar' })
