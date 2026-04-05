@@ -6,14 +6,23 @@ export type PickupEntry = {
 
 export type BuildingType = 'hisa' | 'blok'
 
+export enum Municipality {
+  BistricaObSotli = 'Bistrica Ob Sotli',
+  Kozje = 'Kozje',
+  Podcetrtek = 'Podčetrtek',
+  RogaskaSlatina = 'Rogaška Slatina',
+  Rogatec = 'Rogatec',
+  SmarjePriJelsah = 'Šmarje pri Jelšah',
+}
+
 export type Street = {
-  value: string
+  value: number
   label: string
-  municipality: string
+  municipality: Municipality
 }
 
 export type SavedLocation = {
   buildingType: BuildingType
-  streetId: string
+  streetId: number
   houseNumber: string
 }
