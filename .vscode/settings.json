@@ -3,6 +3,8 @@
   "editor.formatOnSave": true,
   "oxc.enable.oxfmt": true,
   "oxc.enable.oxlint": true,
+  "oxc.fmt.configPath": "frontend/.oxfmtrc.json",
+  "oxc.configPath": "frontend/.oxlintrc.json",
   "[typescriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
