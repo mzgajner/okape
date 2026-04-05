@@ -3,7 +3,7 @@ import { Button } from '@/components/Button'
 import { PickupLoadingState } from '@/components/PickupLoadingState'
 import { fetchPickups } from '@/api'
 import { garbageTypeConfig } from '@/metadata'
-import { downloadCalendar, formatPickupDate } from '@/utils'
+import { formatPickupDate, getCalendarUrl } from '@/utils'
 import type { PickupEntry, Location } from '@/types'
 
 interface Props {
@@ -67,6 +67,8 @@ export function PickupResults({ location, onReset }: Props) {
       })
   }, [pickups])
 
+  const calendarUrl = useMemo(() => getCalendarUrl(location), [location])
+
   if (loading) return <PickupLoadingState location={location} />
 
   if (error)
@@ -94,9 +96,12 @@ export function PickupResults({ location, onReset }: Props) {
         ))}
       </ul>
 
-      <Button onClick={() => downloadCalendar(pickups)} class="w-full py-2 mt-4">
+      <a
+        href={calendarUrl}
+        class="inline-flex items-center justify-center rounded-lg text-base font-medium border transition-colors cursor-pointer bg-primary text-primary-fg border-primary w-full py-2 mt-4"
+      >
         Prenesi koledar
-      </Button>
+      </a>
       <Button variant="outline" onClick={onReset} class="w-full py-2">
         Spremeni lokacijo
       </Button>
