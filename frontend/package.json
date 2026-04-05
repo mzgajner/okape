@@ -12,7 +12,8 @@
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "typecheck": "tsc --noEmit",
-    "check-all": "bun run lint && bun run fmt:check && bun run typecheck"
+    "check-all": "bun run lint && bun run fmt:check && bun run typecheck",
+    "fix-all": "bun run lint:fix && bun run fmt"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
