@@ -20,15 +20,15 @@ routerAdd('GET', '/api/pickup', (e) => {
   }
 })
 
-routerAdd('GET', '/api/calendar.ics', (e) => {
+routerAdd('GET', '/api/calendar/{buildingType}/{streetId}/{houseNumber}', (e) => {
   try {
-    const buildingType = Number(e.request.url.query().get('buildingType'))
-    const streetId = Number(e.request.url.query().get('streetId'))
-    const houseNumber = e.request.url.query().get('houseNumber').toLowerCase()
+    const buildingType = Number(e.request.pathValue('buildingType'))
+    const streetId = Number(e.request.pathValue('streetId'))
+    const houseNumber = e.request.pathValue('houseNumber').toLowerCase()
 
     if (!buildingType || !streetId || !houseNumber) {
       return e.json(400, {
-        error: 'Missing required query parameters: buildingType, streetId, houseNumber',
+        error: 'Missing required parameters: buildingType, streetId, houseNumber',
       })
     }
 

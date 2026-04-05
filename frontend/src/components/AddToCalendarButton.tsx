@@ -8,14 +8,8 @@ interface Props {
 
 function getCalendarUrl(location: Location): string {
   const buildingType = location.buildingType === 'hisa' ? '1' : '3'
-  const params = new URLSearchParams({
-    buildingType,
-    streetId: location.streetId.toString(),
-    houseNumber: location.houseNumber,
-  })
-
   const host = window.location.host
-  const icsPath = `/api/calendar.ics?${params}`
+  const icsPath = `/api/calendar/${buildingType}/${location.streetId}/${location.houseNumber}`
   const ua = navigator.userAgent
 
   if (/iPhone|iPad|Macintosh/.test(ua)) {
