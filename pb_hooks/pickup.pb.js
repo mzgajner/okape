@@ -2,14 +2,29 @@
 
 routerAdd('GET', '/api/pickup', (e) => {
   try {
-    const buildingType = e.request.url.query().get('buildingType')
-    const streetId = e.request.url.query().get('streetId')
-    const houseNumber = e.request.url.query().get('houseNumber')
+    const buildingType = Number(e.request.url.query().get('buildingType'))
+    const streetId = Number(e.request.url.query().get('streetId'))
+    const houseNumber = e.request.url.query().get('houseNumber').toLowerCase()
 
     if (!buildingType || !streetId || !houseNumber) {
       return e.json(400, {
         error: 'Missing required query parameters: buildingType, streetId, houseNumber',
       })
+    }
+
+    // Check cache: find a matching record less than 1 day old
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().replace('T', ' ')
+    try {
+      const cached = $app.findFirstRecordByFilter(
+        'pickup_results',
+        'buildingType={:buildingType} && streetId={:streetId} && houseNumber={:houseNumber} && fetchedAt>={:oneDayAgo}',
+        { buildingType: buildingType, streetId: streetId, houseNumber: houseNumber, oneDayAgo: oneDayAgo }
+      )
+      if (cached) {
+        return e.json(200, { pickups: cached.get('results') })
+      }
+    } catch (e1) {
+      // No cached record found, proceed with fetch
     }
 
     const url =
@@ -88,6 +103,30 @@ routerAdd('GET', '/api/pickup', (e) => {
         date: `${year}-${month}-${day}`,
         type: type,
       })
+    }
+
+    // Store results in cache (upsert: update existing or create new)
+    try {
+      var record
+      try {
+        record = $app.findFirstRecordByFilter(
+          'pickup_results',
+          'buildingType={:buildingType} && streetId={:streetId} && houseNumber={:houseNumber}',
+          { buildingType: buildingType, streetId: streetId, houseNumber: houseNumber }
+        )
+      } catch (e2) {
+        // No existing record, create a new one
+        const collection = $app.findCollectionByNameOrId('pickup_results')
+        record = new Record(collection)
+        record.set('buildingType', buildingType)
+        record.set('streetId', streetId)
+        record.set('houseNumber', houseNumber)
+      }
+      record.set('results', results)
+      $app.save(record)
+    } catch (cacheErr) {
+      // Cache write failure shouldn't break the response
+      console.log('Failed to cache pickup results:', cacheErr)
     }
 
     return e.json(200, { pickups: results })
