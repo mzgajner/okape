@@ -28,10 +28,10 @@ export function PickupResults({ location, onReset }: Props) {
   async function load() {
     setLoading(true)
     setError('')
-    const tipObjekta = location.buildingType === 'hisa' ? '1' : '3'
+    const buildingType = location.buildingType === 'hisa' ? '1' : '3'
     try {
       const result = await fetchPickups(
-        tipObjekta,
+        buildingType,
         location.streetId.toString(),
         location.houseNumber,
       )

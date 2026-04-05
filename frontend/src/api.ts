@@ -1,16 +1,11 @@
 import type { PickupEntry } from './types'
 
 export async function fetchPickups(
-  tipObjekta: string,
-  ulicaId: string,
-  hisnaStevilka: string,
+  buildingType: string,
+  streetId: string,
+  houseNumber: string,
 ): Promise<PickupEntry[]> {
-  const params = new URLSearchParams({
-    tipObjekta,
-    ulica_idUlica: ulicaId,
-    hisnaStevilka,
-  })
-
+  const params = new URLSearchParams({ buildingType, streetId, houseNumber })
   const response = await fetch(`/api/pickup?${params}`)
 
   if (!response.ok) {

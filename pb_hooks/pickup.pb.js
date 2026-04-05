@@ -2,23 +2,21 @@
 
 routerAdd('GET', '/api/pickup', (e) => {
   try {
-    const tipObjekta = e.request.url.query().get('tipObjekta')
-    const ulicaId = e.request.url.query().get('ulica_idUlica')
-    const hisnaStevilka = e.request.url.query().get('hisnaStevilka')
+    const buildingType = e.request.url.query().get('buildingType')
+    const streetId = e.request.url.query().get('streetId')
+    const houseNumber = e.request.url.query().get('houseNumber')
 
-    if (!tipObjekta || !ulicaId || !hisnaStevilka) {
+    if (!buildingType || !streetId || !houseNumber) {
       return e.json(400, {
-        error: 'Missing required parameters: tipObjekta, ulica_idUlica, hisnaStevilka',
+        error: 'Missing required query parameters: buildingType, streetId, houseNumber',
       })
     }
 
     const url =
-      'https://odvoz.okp.si/iskalnik/index?tipObjekta=' +
-      encodeURIComponent(tipObjekta) +
-      '&ulica_idUlica=' +
-      encodeURIComponent(ulicaId) +
-      '&hisnaStevilka=' +
-      encodeURIComponent(hisnaStevilka)
+      'https://odvoz.okp.si/iskalnik/index?' +
+      `tipObjekta=${encodeURIComponent(buildingType)}&` +
+      `ulica_idUlica=${encodeURIComponent(streetId)}&` +
+      `&hisnaStevilka=${encodeURIComponent(houseNumber)}`
 
     const res = $http.send({
       url: url,
@@ -77,7 +75,7 @@ routerAdd('GET', '/api/pickup', (e) => {
       var type = typeMatch[1].replace(/^\s+|\s+$/g, '')
 
       results.push({
-        date: year + '-' + month + '-' + day,
+        date: `${year}-${month}-${day}`,
         type: type,
         color: colorMatch[1],
       })
