@@ -2,8 +2,7 @@ import { useState, useEffect } from 'preact/hooks'
 import { LocationForm } from './components/LocationForm'
 import { PickupResults } from './components/PickupResults'
 import { fetchPickups } from './api'
-import { streets } from './streets'
-import { Spinner } from './components/Spinner'
+import { AutoLoadingState } from './components/AutoLoadingState'
 import type { PickupEntry, SavedLocation } from './types'
 import garbageTruck from './assets/garbage_truck.svg'
 
@@ -19,18 +18,12 @@ function loadSavedLocation(): SavedLocation | undefined {
   }
 }
 
-function getLocationLabel(location: SavedLocation): string {
-  const street = streets.find((s) => s.value === location.streetId)
-  if (!street) return ''
-  return `${street.label} ${location.houseNumber}, ${street.municipality}`
-}
-
 export function App() {
   const [pickups, setPickups] = useState<PickupEntry[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [autoLoading, setAutoLoading] = useState(false)
-  const [autoLoadingLabel, setAutoLoadingLabel] = useState('')
+  const [savedLocation] = useState(loadSavedLocation)
+  const [autoLoading, setAutoLoading] = useState(!!savedLocation)
 
   async function handleSubmit(location: SavedLocation) {
     setLoading(true)
@@ -64,11 +57,8 @@ export function App() {
   }
 
   useEffect(() => {
-    const location = loadSavedLocation()
-    if (location) {
-      setAutoLoading(true)
-      setAutoLoadingLabel(`Nalagam termine odvoza za ${getLocationLabel(location)}`)
-      handleSubmit(location)
+    if (savedLocation) {
+      handleSubmit(savedLocation)
     }
   }, [])
 
@@ -82,10 +72,7 @@ export function App() {
         {pickups.length > 0 ? (
           <PickupResults pickups={pickups} onReset={resetLocation} />
         ) : autoLoading ? (
-          <div class="flex flex-col items-center gap-3 py-4">
-            <Spinner class="h-6 w-6 text-muted" />
-            <p class="text-base text-muted">{autoLoadingLabel}</p>
-          </div>
+          <AutoLoadingState location={savedLocation!} />
         ) : (
           <LocationForm loading={loading} error={error} onSubmit={handleSubmit} />
         )}
