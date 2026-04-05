@@ -1,7 +1,16 @@
+export enum GarbageType {
+  Packaging = 'PACKAGING',
+  Mixed = 'MIXED',
+  Paper = 'PAPER',
+  Glass = 'GLASS',
+  Textile = 'TEXTILE',
+  Electronics = 'ELECTRONICS',
+  Organic = 'ORGANIC',
+}
+
 export type PickupEntry = {
   date: string
-  type: string
-  color: string
+  type: GarbageType
 }
 
 export type BuildingType = 'hisa' | 'blok'

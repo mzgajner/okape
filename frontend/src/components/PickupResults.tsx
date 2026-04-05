@@ -3,16 +3,17 @@ import { Button } from './Button'
 import { PickupLoadingState } from './PickupLoadingState'
 import { fetchPickups } from '../api'
 import { formatPickupDate } from '../date-format'
+import { GarbageType } from '../types'
 import type { PickupEntry, Location } from '../types'
 
-const typeLabels: Record<string, string> = {
-  'rumena vreča': 'embalaža',
-  'mešan komunalni odpad': 'mešani odpadki',
-  'papir, časopisi, revije': 'papir',
-  'steklena embalaža': 'steklo',
-  tekstil: 'tekstil',
-  'bela tehnika in elektronska oprema': 'elektronika',
-  'bioloških odpadkov': 'biološki odpadki',
+const garbageTypeConfig: Record<GarbageType, { label: string; color: string }> = {
+  [GarbageType.Packaging]: { label: 'embalaža', color: '#fde047' },
+  [GarbageType.Mixed]: { label: 'mešani odpadki', color: '#92d050' },
+  [GarbageType.Paper]: { label: 'papir', color: '#60a5fa' },
+  [GarbageType.Glass]: { label: 'steklo', color: '#f86666' },
+  [GarbageType.Textile]: { label: 'tekstil', color: '#c4bd97' },
+  [GarbageType.Electronics]: { label: 'elektronika', color: '#8064a2' },
+  [GarbageType.Organic]: { label: 'biološki odpadki', color: '#ffa200' },
 }
 
 interface Props {
@@ -65,11 +66,15 @@ export function PickupResults({ location, onReset }: Props) {
 
     return [...byType.values()]
       .sort((a, b) => a.date.localeCompare(b.date))
-      .map((p) => ({
-        ...p,
-        displayName: typeLabels[p.type] || p.type,
-        formattedDate: formatPickupDate(p.date),
-      }))
+      .map((p) => {
+        const config = garbageTypeConfig[p.type]
+        return {
+          ...p,
+          displayName: config?.label ?? p.type,
+          color: config?.color ?? '#888',
+          formattedDate: formatPickupDate(p.date),
+        }
+      })
   }, [pickups])
 
   if (loading) return <PickupLoadingState location={location} />
@@ -90,7 +95,7 @@ export function PickupResults({ location, onReset }: Props) {
         {nextPickups.map((pickup) => (
           <li key={pickup.type} class="flex items-center gap-3">
             <span
-              class="inline-block w-3 h-3 rounded-full shrink-0"
+              class="inline-block w-5 h-5 rounded-full shrink-0"
               style={{ backgroundColor: pickup.color }}
             />
             <span class="font-medium">{pickup.displayName}</span>

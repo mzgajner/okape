@@ -56,9 +56,6 @@ routerAdd('GET', '/api/pickup', (e) => {
       var block = blocks[j]
       if (block.indexOf('date-box') === -1) continue
 
-      var colorMatch = block.match(/background-color:\s*(#[a-fA-F0-9]+)/)
-      if (!colorMatch) continue
-
       var dayMatch = block.match(/<div class="day">(\d+)<\/div>/)
       var monthMatch = block.match(/<div class="month">([^<]+)<\/div>/)
       var yearMatch = block.match(/<div class="year">(\d+)<\/div>/)
@@ -72,12 +69,24 @@ routerAdd('GET', '/api/pickup', (e) => {
 
       var typeMatch = block.match(/Odvoz\s+([^<]+)/)
       if (!typeMatch) continue
-      var type = typeMatch[1].replace(/^\s+|\s+$/g, '')
+      var rawType = typeMatch[1].replace(/^\s+|\s+$/g, '')
+
+      var typeMap = {
+        'rumena vreča': 'PACKAGING',
+        'mešan komunalni odpad': 'MIXED',
+        'papir, časopisi, revije': 'PAPER',
+        'steklena embalaža': 'GLASS',
+        'tekstil': 'TEXTILE',
+        'bela tehnika in elektronska oprema': 'ELECTRONICS',
+        'bioloških odpadkov': 'ORGANIC',
+      }
+
+      var type = typeMap[rawType]
+      if (!type) continue
 
       results.push({
         date: `${year}-${month}-${day}`,
         type: type,
-        color: colorMatch[1],
       })
     }
 
