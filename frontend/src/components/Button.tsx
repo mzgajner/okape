@@ -24,7 +24,14 @@ const variants: Record<Variant, { default: string; active?: string }> = {
   },
 }
 
-export function Button({ variant = 'primary', active, disabled, class: className, onClick, children }: Props) {
+export function Button({
+  variant = 'primary',
+  active,
+  disabled,
+  class: className,
+  onClick,
+  children,
+}: Props) {
   const v = variants[variant]
   const variantClass = active && v.active ? v.active : v.default
 
