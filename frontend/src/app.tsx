@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'preact/hooks'
-import { LocationForm } from './components/LocationForm'
+import { useState } from 'preact/hooks'
+import { LocationSelection } from './components/LocationSelection'
 import { PickupResults } from './components/PickupResults'
-import { fetchPickups } from './api'
-import { AutoLoadingState } from './components/AutoLoadingState'
-import type { PickupEntry, SavedLocation } from './types'
+import type { Location } from './types'
 import garbageTruck from './assets/garbage_truck.svg'
 
 const STORAGE_KEY = 'okape-location'
 
-function loadSavedLocation(): SavedLocation | undefined {
+function loadSavedLocation(): Location | undefined {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return undefined
@@ -19,48 +17,17 @@ function loadSavedLocation(): SavedLocation | undefined {
 }
 
 export function App() {
-  const [pickups, setPickups] = useState<PickupEntry[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [savedLocation] = useState(loadSavedLocation)
-  const [autoLoading, setAutoLoading] = useState(!!savedLocation)
+  const [location, setLocation] = useState(loadSavedLocation)
 
-  async function handleSubmit(location: SavedLocation) {
-    setLoading(true)
-    setError('')
-
-    const tipObjekta = location.buildingType === 'hisa' ? '1' : '3'
-
-    try {
-      const result = await fetchPickups(
-        tipObjekta,
-        location.streetId.toString(),
-        location.houseNumber,
-      )
-      if (result.length === 0) {
-        setError('Za izbrano lokacijo ni najdenih odvozov.')
-        return
-      }
-      setPickups(result)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(location))
-    } catch {
-      setError('Napaka pri pridobivanju podatkov. Poskusite znova.')
-    } finally {
-      setLoading(false)
-      setAutoLoading(false)
-    }
+  function handleSubmit(loc: Location) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(loc))
+    setLocation(loc)
   }
 
   function resetLocation() {
-    setPickups([])
     localStorage.removeItem(STORAGE_KEY)
+    setLocation(undefined)
   }
-
-  useEffect(() => {
-    if (savedLocation) {
-      handleSubmit(savedLocation)
-    }
-  }, [])
 
   return (
     <div class="min-h-screen flex items-center justify-center">
@@ -69,12 +36,10 @@ export function App() {
           <img src={garbageTruck} alt="O Ka Pe" class="w-20 h-20 mx-auto mb-3" />
         </div>
 
-        {pickups.length > 0 ? (
-          <PickupResults pickups={pickups} onReset={resetLocation} />
-        ) : autoLoading ? (
-          <AutoLoadingState location={savedLocation!} />
+        {location ? (
+          <PickupResults location={location} onReset={resetLocation} />
         ) : (
-          <LocationForm loading={loading} error={error} onSubmit={handleSubmit} />
+          <LocationSelection onSubmit={handleSubmit} />
         )}
       </div>
     </div>

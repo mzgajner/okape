@@ -1,7 +1,9 @@
-import { useMemo } from 'preact/hooks'
+import { useMemo, useState, useEffect } from 'preact/hooks'
 import { Button } from './Button'
-import type { PickupEntry } from '../types'
+import { PickupLoadingState } from './PickupLoadingState'
+import { fetchPickups } from '../api'
 import { formatPickupDate } from '../date-format'
+import type { PickupEntry, Location } from '../types'
 
 const typeLabels: Record<string, string> = {
   'rumena vreča': 'embalaža',
@@ -14,11 +16,41 @@ const typeLabels: Record<string, string> = {
 }
 
 interface Props {
-  pickups: PickupEntry[]
+  location: Location
   onReset: () => void
 }
 
-export function PickupResults({ pickups, onReset }: Props) {
+export function PickupResults({ location, onReset }: Props) {
+  const [pickups, setPickups] = useState<PickupEntry[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  async function load() {
+    setLoading(true)
+    setError('')
+    const tipObjekta = location.buildingType === 'hisa' ? '1' : '3'
+    try {
+      const result = await fetchPickups(
+        tipObjekta,
+        location.streetId.toString(),
+        location.houseNumber,
+      )
+      if (result.length === 0) {
+        setError('Za izbrano lokacijo ni najdenih odvozov.')
+      } else {
+        setPickups(result)
+      }
+    } catch {
+      setError('Napaka pri pridobivanju podatkov. Poskusite znova.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    load()
+  }, [])
+
   const nextPickups = useMemo(() => {
     const today = new Date().toISOString().split('T')[0]
     const byType = new Map<string, PickupEntry>()
@@ -39,6 +71,18 @@ export function PickupResults({ pickups, onReset }: Props) {
         formattedDate: formatPickupDate(p.date),
       }))
   }, [pickups])
+
+  if (loading) return <PickupLoadingState location={location} />
+
+  if (error)
+    return (
+      <div class="space-y-4">
+        <p class="text-destructive text-base text-center">{error}</p>
+        <Button variant="outline" onClick={onReset} class="w-full py-2">
+          Spremeni lokacijo
+        </Button>
+      </div>
+    )
 
   return (
     <div class="space-y-4">

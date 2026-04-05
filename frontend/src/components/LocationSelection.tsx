@@ -1,16 +1,15 @@
 import { useState, useMemo } from 'preact/hooks'
 import { Button } from './Button'
-import { Spinner } from './Spinner'
+import { IconHouse } from './IconHouse'
+import { IconBuilding } from './IconBuilding'
 import { streets } from '../streets'
-import type { BuildingType, Municipality, SavedLocation } from '../types'
+import type { BuildingType, Municipality, Location } from '../types'
 
 interface Props {
-  loading: boolean
-  error: string
-  onSubmit: (location: SavedLocation) => void
+  onSubmit: (location: Location) => void
 }
 
-export function LocationForm({ loading, error, onSubmit }: Props) {
+export function LocationSelection({ onSubmit }: Props) {
   const [buildingType, setBuildingType] = useState<BuildingType>('hisa')
   const [municipality, setMunicipality] = useState<Municipality | undefined>()
   const [streetId, setStreetId] = useState<number>()
@@ -56,22 +55,24 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
       <div>
         <label class="block text-base font-medium mb-2">Tip stavbe</label>
         <div class="flex gap-2">
-          {(
-            [
-              ['hisa', 'Hiša'],
-              ['blok', 'Blok'],
-            ] as const
-          ).map(([val, label]) => (
-            <Button
-              key={val}
-              variant="outline"
-              active={buildingType === val}
-              onClick={() => setBuildingType(val)}
-              class="px-5 py-2.5"
-            >
-              {label}
-            </Button>
-          ))}
+          <Button
+            variant="outline"
+            active={buildingType === 'hisa'}
+            onClick={() => setBuildingType('hisa')}
+            class="flex-1 py-2.5"
+          >
+            <IconHouse class="w-4 h-4 mr-1.5" />
+            Hiša
+          </Button>
+          <Button
+            variant="outline"
+            active={buildingType === 'blok'}
+            onClick={() => setBuildingType('blok')}
+            class="flex-1 py-2.5"
+          >
+            <IconBuilding class="w-4 h-4 mr-1.5" />
+            Blok
+          </Button>
         </div>
       </div>
 
@@ -125,12 +126,9 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
         />
       </div>
 
-      <Button disabled={!canSubmit || loading} onClick={submit} class="w-full h-13">
-        {loading && <Spinner class="-ml-1 mr-2 h-5 w-5" />}
+      <Button disabled={!canSubmit} onClick={submit} class="w-full h-13">
         Poišči termine odvoza
       </Button>
-
-      {error && <p class="text-destructive text-base">{error}</p>}
     </div>
   )
 }

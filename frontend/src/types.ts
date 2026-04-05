@@ -21,7 +21,7 @@ export type Street = {
   municipality: Municipality
 }
 
-export type SavedLocation = {
+export type Location = {
   buildingType: BuildingType
   streetId: number
   houseNumber: string
