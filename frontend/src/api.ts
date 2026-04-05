@@ -1,4 +1,4 @@
-import type { PickupEntry } from './types'
+import type { PickupEntry } from '@/types'
 
 export async function fetchPickups(
   buildingType: string,

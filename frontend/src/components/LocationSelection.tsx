@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'preact/hooks'
-import { Button } from './Button'
-import { IconHouse } from './IconHouse'
-import { IconBuilding } from './IconBuilding'
-import { streets } from '../metadata'
-import type { BuildingType, Municipality, Location } from '../types'
+import { Button } from '@/components/Button'
+import { IconHouse } from '@/components/IconHouse'
+import { IconBuilding } from '@/components/IconBuilding'
+import { streets } from '@/metadata'
+import type { BuildingType, Municipality, Location } from '@/types'
 
 interface Props {
   onSubmit: (location: Location) => void

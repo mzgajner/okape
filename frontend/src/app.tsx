@@ -1,8 +1,8 @@
 import { useState } from 'preact/hooks'
-import { LocationSelection } from './components/LocationSelection'
-import { PickupResults } from './components/PickupResults'
-import type { Location } from './types'
-import garbageTruck from './assets/garbage_truck.svg'
+import { LocationSelection } from '@/components/LocationSelection'
+import { PickupResults } from '@/components/PickupResults'
+import type { Location } from '@/types'
+import garbageTruck from '@/assets/garbage_truck.svg'
 
 const STORAGE_KEY = 'okape-location'
 

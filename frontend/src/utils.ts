@@ -2,15 +2,17 @@ import { differenceInDays, formatDistance, formatRelative, startOfToday, parseIS
 import { sl } from 'date-fns/locale'
 import { createEvents } from 'ics'
 import type { EventAttributes } from 'ics'
-import { garbageTypeConfig } from './metadata'
-import type { PickupEntry } from './types'
+import { garbageTypeConfig } from '@/metadata'
+import type { PickupEntry } from '@/types'
 
 export function formatPickupDate(isoDate: string): string {
   const date = parseISO(isoDate)
   const today = startOfToday()
 
   if (differenceInDays(date, today) <= 6) {
-    return formatRelative(date, today, { locale: sl }).split(' ob ')[0].replace(/naslednj[io]/, 'v')
+    return formatRelative(date, today, { locale: sl })
+      .split(' ob ')[0]
+      .replace(/naslednj[io]/, 'v')
   } else {
     return formatDistance(date, today, { locale: sl, addSuffix: true })
   }

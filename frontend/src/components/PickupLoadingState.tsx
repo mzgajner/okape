@@ -1,6 +1,6 @@
-import { Spinner } from './Spinner'
-import { streets } from '../metadata'
-import type { Location } from '../types'
+import { Spinner } from '@/components/Spinner'
+import { streets } from '@/metadata'
+import type { Location } from '@/types'
 
 interface Props {
   location: Location

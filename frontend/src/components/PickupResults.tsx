@@ -1,10 +1,10 @@
 import { useMemo, useState, useEffect } from 'preact/hooks'
-import { Button } from './Button'
-import { PickupLoadingState } from './PickupLoadingState'
-import { fetchPickups } from '../api'
-import { garbageTypeConfig } from '../metadata'
-import { downloadCalendar, formatPickupDate } from '../utils'
-import type { PickupEntry, Location } from '../types'
+import { Button } from '@/components/Button'
+import { PickupLoadingState } from '@/components/PickupLoadingState'
+import { fetchPickups } from '@/api'
+import { garbageTypeConfig } from '@/metadata'
+import { downloadCalendar, formatPickupDate } from '@/utils'
+import type { PickupEntry, Location } from '@/types'
 
 interface Props {
   location: Location
