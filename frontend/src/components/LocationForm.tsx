@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'preact/hooks'
 import { streets } from '../streets'
-import type { BuildingType, SavedLocation } from '../types'
+import type { BuildingType, Municipality, SavedLocation } from '../types'
 
 interface Props {
   loading: boolean
@@ -10,8 +10,8 @@ interface Props {
 
 export function LocationForm({ loading, error, onSubmit }: Props) {
   const [buildingType, setBuildingType] = useState<BuildingType>('hisa')
-  const [municipality, setMunicipality] = useState('')
-  const [streetId, setStreetId] = useState('')
+  const [municipality, setMunicipality] = useState<Municipality | undefined>()
+  const [streetId, setStreetId] = useState<number>()
   const [houseNumber, setHouseNumber] = useState('')
 
   const municipalities = useMemo(
@@ -30,9 +30,14 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
   const canSubmit = streetId && houseNumber.trim()
 
   function handleMunicipalityChange(e: Event) {
-    const val = (e.target as HTMLSelectElement).value
+    const val = (e.target as HTMLSelectElement).value as Municipality
     setMunicipality(val)
-    setStreetId('')
+    setStreetId(undefined)
+  }
+
+  function handleStreetChange(e: Event) {
+    const val = Number((e.target as HTMLSelectElement).value)
+    setStreetId(val)
   }
 
   function submit() {
@@ -92,7 +97,7 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
           <label class="block text-sm font-medium mb-2">Ulica</label>
           <select
             value={streetId}
-            onChange={(e) => setStreetId((e.target as HTMLSelectElement).value)}
+            onChange={handleStreetChange}
             class="w-full h-10 px-3 rounded-lg border border-border bg-white text-sm"
           >
             <option value="">Izberi ulico...</option>
