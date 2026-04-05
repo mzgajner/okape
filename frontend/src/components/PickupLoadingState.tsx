@@ -16,7 +16,11 @@ export function PickupLoadingState({ location }: Props) {
   return (
     <div class="flex flex-col items-center gap-3 py-4">
       <Spinner class="h-6 w-6 text-muted" />
-      <p class="text-base text-muted">Nalagam termine odvoza za {getLocationLabel(location)}</p>
+      <p class="text-base text-center text-muted">
+        Nalagam termine za
+        <br />
+        {getLocationLabel(location)}
+      </p>
     </div>
   )
 }
