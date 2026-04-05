@@ -1,10 +1,4 @@
-import {
-  differenceInDays,
-  formatDistance,
-  formatRelative,
-  startOfToday,
-  parseISO,
-} from 'date-fns'
+import { differenceInDays, formatDistance, formatRelative, startOfToday, parseISO } from 'date-fns'
 import { sl } from 'date-fns/locale'
 
 export function formatPickupDate(isoDate: string): string {
@@ -12,9 +6,7 @@ export function formatPickupDate(isoDate: string): string {
   const today = startOfToday()
 
   if (differenceInDays(date, today) <= 6) {
-    return formatRelative(date, today, { locale: sl })
-      .split(' ob ')[0]
-      .replace('naslednji', 'v')
+    return formatRelative(date, today, { locale: sl }).split(' ob ')[0].replace('naslednji', 'v')
   } else {
     return formatDistance(date, today, { locale: sl, addSuffix: true })
   }

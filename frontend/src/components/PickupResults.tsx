@@ -7,7 +7,7 @@ const typeLabels: Record<string, string> = {
   'mešan komunalni odpad': 'mešani odpadki',
   'papir, časopisi, revije': 'papir',
   'steklena embalaža': 'steklo',
-  'tekstil': 'tekstil',
+  tekstil: 'tekstil',
   'bela tehnika in elektronska oprema': 'elektronika',
   'bioloških odpadkov': 'biološki odpadki',
 }

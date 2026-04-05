@@ -49,7 +49,12 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
       <div>
         <label class="block text-sm font-medium mb-2">Tip stavbe</label>
         <div class="flex gap-2">
-          {([['hisa', 'Hiša'], ['blok', 'Blok']] as const).map(([val, label]) => (
+          {(
+            [
+              ['hisa', 'Hiša'],
+              ['blok', 'Blok'],
+            ] as const
+          ).map(([val, label]) => (
             <button
               key={val}
               type="button"
@@ -75,7 +80,9 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
         >
           <option value="">Izberi občino...</option>
           {municipalities.map((m) => (
-            <option key={m} value={m}>{m}</option>
+            <option key={m} value={m}>
+              {m}
+            </option>
           ))}
         </select>
       </div>
@@ -90,7 +97,9 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
           >
             <option value="">Izberi ulico...</option>
             {filteredStreets.map((s) => (
-              <option key={s.value} value={s.value}>{s.label}</option>
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
             ))}
           </select>
         </div>

@@ -1,88 +1,79 @@
-import { useState, useEffect } from "preact/hooks";
-import { LocationForm } from "./components/LocationForm";
-import { PickupResults } from "./components/PickupResults";
-import { fetchPickups } from "./api";
-import { streets } from "./streets";
-import type { PickupEntry, SavedLocation } from "./types";
-import garbageTruck from "./assets/garbage_truck.svg";
+import { useState, useEffect } from 'preact/hooks'
+import { LocationForm } from './components/LocationForm'
+import { PickupResults } from './components/PickupResults'
+import { fetchPickups } from './api'
+import { streets } from './streets'
+import type { PickupEntry, SavedLocation } from './types'
+import garbageTruck from './assets/garbage_truck.svg'
 
-const STORAGE_KEY = "okape-location";
+const STORAGE_KEY = 'okape-location'
 
 function loadSavedLocation(): SavedLocation | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    return JSON.parse(raw)
   } catch {
-    return null;
+    return null
   }
 }
 
 function getLocationLabel(location: SavedLocation): string {
-  const street = streets.find((s) => s.value === location.streetId);
-  if (!street) return "";
-  return `${street.label}, ${street.municipality}`;
+  const street = streets.find((s) => s.value === location.streetId)
+  if (!street) return ''
+  return `${street.label}, ${street.municipality}`
 }
 
 export function App() {
-  const [pickups, setPickups] = useState<PickupEntry[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [autoLoading, setAutoLoading] = useState(false);
-  const [autoLoadingLabel, setAutoLoadingLabel] = useState("");
+  const [pickups, setPickups] = useState<PickupEntry[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [autoLoading, setAutoLoading] = useState(false)
+  const [autoLoadingLabel, setAutoLoadingLabel] = useState('')
 
   async function handleSubmit(location: SavedLocation) {
-    setLoading(true);
-    setError("");
+    setLoading(true)
+    setError('')
 
-    const tipObjekta = location.buildingType === "hisa" ? "1" : "3";
+    const tipObjekta = location.buildingType === 'hisa' ? '1' : '3'
 
     try {
-      const result = await fetchPickups(
-        tipObjekta,
-        location.streetId,
-        location.houseNumber,
-      );
+      const result = await fetchPickups(tipObjekta, location.streetId, location.houseNumber)
       if (result.length === 0) {
-        setError("Za izbrano lokacijo ni najdenih odvozov.");
-        return;
+        setError('Za izbrano lokacijo ni najdenih odvozov.')
+        return
       }
-      setPickups(result);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(location));
+      setPickups(result)
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(location))
     } catch {
-      setError("Napaka pri pridobivanju podatkov. Poskusite znova.");
+      setError('Napaka pri pridobivanju podatkov. Poskusite znova.')
     } finally {
-      setLoading(false);
-      setAutoLoading(false);
+      setLoading(false)
+      setAutoLoading(false)
     }
   }
 
   function resetLocation() {
-    setPickups([]);
-    localStorage.removeItem(STORAGE_KEY);
+    setPickups([])
+    localStorage.removeItem(STORAGE_KEY)
   }
 
   useEffect(() => {
-    const location = loadSavedLocation();
+    const location = loadSavedLocation()
     if (location) {
-      setAutoLoading(true);
-      setAutoLoadingLabel(
-        `Nalagam termine odvoza za ${getLocationLabel(location)}`,
-      );
-      handleSubmit(location);
+      setAutoLoading(true)
+      setAutoLoadingLabel(`Nalagam termine odvoza za ${getLocationLabel(location)}`)
+      handleSubmit(location)
     }
-  }, []);
+  }, [])
 
   return (
     <div class="min-h-screen">
       <div class="max-w-md mx-auto px-4 py-8">
         <div class="text-center mb-8">
-          <img
-            src={garbageTruck}
-            alt="O Ka Pe"
-            class="w-20 h-20 mx-auto mb-3"
-          />
+          <img src={garbageTruck} alt="O Ka Pe" class="w-20 h-20 mx-auto mb-3" />
           <h1 class="text-2xl font-bold text-primary">O Ka Pe</h1>
+          <p class="text-sm text-muted">Kdaj je naslednji odvoz?</p>
         </div>
 
         <div class="bg-card-bg rounded-xl border border-border p-6 shadow-sm">
@@ -102,14 +93,10 @@ export function App() {
               <p class="text-sm text-muted">{autoLoadingLabel}</p>
             </div>
           ) : (
-            <LocationForm
-              loading={loading}
-              error={error}
-              onSubmit={handleSubmit}
-            />
+            <LocationForm loading={loading} error={error} onSubmit={handleSubmit} />
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }
