@@ -1,15 +1,9 @@
-import path from 'node:path'
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import preact from '@preact/preset-vite'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
-  resolve: {
-    alias: {
-      '#': path.resolve(__dirname, './src'),
-    },
-  },
+  plugins: [preact(), tailwindcss()],
   server: {
     proxy: {
       '/api': {
