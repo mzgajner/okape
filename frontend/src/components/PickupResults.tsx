@@ -2,19 +2,9 @@ import { useMemo, useState, useEffect } from 'preact/hooks'
 import { Button } from './Button'
 import { PickupLoadingState } from './PickupLoadingState'
 import { fetchPickups } from '../api'
-import { formatPickupDate } from '../date-format'
-import { GarbageType } from '../types'
+import { garbageTypeConfig } from '../metadata'
+import { downloadCalendar, formatPickupDate } from '../utils'
 import type { PickupEntry, Location } from '../types'
-
-const garbageTypeConfig: Record<GarbageType, { label: string; color: string }> = {
-  [GarbageType.Packaging]: { label: 'embalaža', color: '#fde047' },
-  [GarbageType.Mixed]: { label: 'mešani odpadki', color: '#92d050' },
-  [GarbageType.Paper]: { label: 'papir', color: '#60a5fa' },
-  [GarbageType.Glass]: { label: 'steklo', color: '#f86666' },
-  [GarbageType.Textile]: { label: 'tekstil', color: '#c4bd97' },
-  [GarbageType.Electronics]: { label: 'elektronika', color: '#8064a2' },
-  [GarbageType.Organic]: { label: 'biološki odpadki', color: '#ffa200' },
-}
 
 interface Props {
   location: Location
@@ -104,7 +94,10 @@ export function PickupResults({ location, onReset }: Props) {
         ))}
       </ul>
 
-      <Button variant="outline" onClick={onReset} class="w-full py-2 mt-4">
+      <Button onClick={() => downloadCalendar(pickups)} class="w-full py-2 mt-4">
+        Prenesi koledar
+      </Button>
+      <Button variant="outline" onClick={onReset} class="w-full py-2">
         Spremeni lokacijo
       </Button>
     </div>

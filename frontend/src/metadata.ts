@@ -1,4 +1,14 @@
-import { Municipality, type Street } from './types'
+import { GarbageType, Municipality, type Street } from './types'
+
+export const garbageTypeConfig: Record<GarbageType, { label: string; color: string }> = {
+  [GarbageType.Packaging]: { label: 'embalaža', color: '#fde047' },
+  [GarbageType.Mixed]: { label: 'mešani odpadki', color: '#92d050' },
+  [GarbageType.Paper]: { label: 'papir', color: '#60a5fa' },
+  [GarbageType.Glass]: { label: 'steklo', color: '#f86666' },
+  [GarbageType.Textile]: { label: 'tekstil', color: '#c4bd97' },
+  [GarbageType.Electronics]: { label: 'elektronika', color: '#8064a2' },
+  [GarbageType.Organic]: { label: 'biološki odpadki', color: '#ffa200' },
+}
 
 export const streets: Street[] = [
   {

@@ -1,5 +1,5 @@
 import { Spinner } from './Spinner'
-import { streets } from '../streets'
+import { streets } from '../metadata'
 import type { Location } from '../types'
 
 interface Props {

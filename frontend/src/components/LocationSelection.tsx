@@ -2,7 +2,7 @@ import { useState, useMemo } from 'preact/hooks'
 import { Button } from './Button'
 import { IconHouse } from './IconHouse'
 import { IconBuilding } from './IconBuilding'
-import { streets } from '../streets'
+import { streets } from '../metadata'
 import type { BuildingType, Municipality, Location } from '../types'
 
 interface Props {
