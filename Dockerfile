@@ -11,7 +11,7 @@ FROM alpine:latest
 
 COPY --from=frontend-build /usr/src/okape-client/dist /pb/pb_public
 
-ARG PB_VERSION=0.28.3
+ARG PB_VERSION=0.36.8
 
 RUN apk add --no-cache \
     unzip \
@@ -21,6 +21,7 @@ ADD https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/po
 RUN unzip /tmp/pb.zip -d /pb/
 
 COPY ./pb_hooks /pb/pb_hooks
+COPY ./pb_migrations /pb/pb_migrations
 
 EXPOSE 80
 
