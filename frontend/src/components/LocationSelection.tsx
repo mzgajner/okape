@@ -46,7 +46,7 @@ export function LocationSelection({ onSubmit }: Props) {
     onSubmit({
       buildingType,
       streetId,
-      houseNumber: houseNumber.trim().toUpperCase(),
+      houseNumber: houseNumber.trim().toLowerCase(),
     })
   }
 
@@ -120,7 +120,7 @@ export function LocationSelection({ onSubmit }: Props) {
           value={houseNumber}
           onInput={(e) => setHouseNumber((e.target as HTMLInputElement).value)}
           onKeyDown={(e) => e.key === 'Enter' && submit()}
-          placeholder="npr. 12B"
+          placeholder="npr. 12b"
           class={`w-full h-12 px-3 rounded-lg border border-border text-base ${!municipality ? 'bg-gray-100 opacity-60 cursor-not-allowed' : 'bg-white'}`}
           disabled={!municipality}
         />
