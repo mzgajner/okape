@@ -1,9 +1,10 @@
 import { useMemo, useState, useEffect } from 'preact/hooks'
 import { Button } from '@/components/Button'
+import { AddToCalendarButton } from '@/components/AddToCalendarButton'
 import { PickupLoadingState } from '@/components/PickupLoadingState'
 import { fetchPickups } from '@/api'
 import { garbageTypeConfig } from '@/metadata'
-import { formatPickupDate, getCalendarUrl } from '@/utils'
+import { formatPickupDate } from '@/utils'
 import type { PickupEntry, Location } from '@/types'
 
 interface Props {
@@ -67,8 +68,6 @@ export function PickupResults({ location, onReset }: Props) {
       })
   }, [pickups])
 
-  const calendarUrl = useMemo(() => getCalendarUrl(location), [location])
-
   if (loading) return <PickupLoadingState location={location} />
 
   if (error)
@@ -96,12 +95,7 @@ export function PickupResults({ location, onReset }: Props) {
         ))}
       </ul>
 
-      <a
-        href={calendarUrl}
-        class="inline-flex items-center justify-center rounded-lg text-base font-medium border transition-colors cursor-pointer bg-primary text-primary-fg border-primary w-full py-2 mt-4"
-      >
-        Prenesi koledar
-      </a>
+      <AddToCalendarButton location={location} class="w-full py-2 mt-4" />
       <Button variant="outline" onClick={onReset} class="w-full py-2">
         Spremeni lokacijo
       </Button>
