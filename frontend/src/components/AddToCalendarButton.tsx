@@ -23,10 +23,10 @@ function getCalendarUrl(location: Location): string {
   }
 
   if (/Android/.test(ua)) {
-    return `//calendar.google.com/calendar/r?cid=https://${host}${icsPath}`
+    return `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(`https://${host}${icsPath}`)}`
   }
 
-  return `//${host}${icsPath}`
+  return `https://${host}${icsPath}`
 }
 
 export function AddToCalendarButton({ location, class: className }: Props) {
