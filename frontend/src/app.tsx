@@ -3,6 +3,7 @@ import { LocationForm } from './components/LocationForm'
 import { PickupResults } from './components/PickupResults'
 import { fetchPickups } from './api'
 import { streets } from './streets'
+import { Spinner } from './components/Spinner'
 import type { PickupEntry, SavedLocation } from './types'
 import garbageTruck from './assets/garbage_truck.svg'
 
@@ -21,7 +22,7 @@ function loadSavedLocation(): SavedLocation | undefined {
 function getLocationLabel(location: SavedLocation): string {
   const street = streets.find((s) => s.value === location.streetId)
   if (!street) return ''
-  return `${street.label}, ${street.municipality}`
+  return `${street.label} ${location.houseNumber}, ${street.municipality}`
 }
 
 export function App() {
@@ -82,15 +83,7 @@ export function App() {
           <PickupResults pickups={pickups} onReset={resetLocation} />
         ) : autoLoading ? (
           <div class="flex flex-col items-center gap-3 py-4">
-            <svg
-              class="h-6 w-6 animate-spin text-muted"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-            </svg>
+            <Spinner class="h-6 w-6 text-muted" />
             <p class="text-base text-muted">{autoLoadingLabel}</p>
           </div>
         ) : (
