@@ -38,7 +38,11 @@ export function App() {
     const tipObjekta = location.buildingType === 'hisa' ? '1' : '3'
 
     try {
-      const result = await fetchPickups(tipObjekta, location.streetId, location.houseNumber)
+      const result = await fetchPickups(
+        tipObjekta,
+        location.streetId.toString(),
+        location.houseNumber,
+      )
       if (result.length === 0) {
         setError('Za izbrano lokacijo ni najdenih odvozov.')
         return
@@ -73,7 +77,6 @@ export function App() {
         <div class="text-center mb-8">
           <img src={garbageTruck} alt="O Ka Pe" class="w-20 h-20 mx-auto mb-3" />
           <h1 class="text-2xl font-bold text-primary">O Ka Pe</h1>
-          <p class="text-sm text-muted">Kdaj je naslednji odvoz?</p>
         </div>
 
         <div class="bg-card-bg rounded-xl border border-border p-6 shadow-sm">
