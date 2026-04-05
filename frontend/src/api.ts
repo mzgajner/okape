@@ -14,7 +14,7 @@ export async function fetchPickups(
   const response = await fetch(`/api/pickup?${params}`)
 
   if (!response.ok) {
-    throw new Error('Napaka pri pridobivanju podatkov')
+    throw new Error('Napaka pri iskanju terminov')
   }
 
   const data = await response.json()

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'preact/hooks'
+import { Button } from './Button'
 import { streets } from '../streets'
 import type { BuildingType, Municipality, SavedLocation } from '../types'
 
@@ -50,9 +51,9 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
   }
 
   return (
-    <div class="space-y-5">
+    <div class="space-y-6">
       <div>
-        <label class="block text-sm font-medium mb-2">Tip stavbe</label>
+        <label class="block text-base font-medium mb-2">Tip stavbe</label>
         <div class="flex gap-2">
           {(
             [
@@ -60,30 +61,29 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
               ['blok', 'Blok'],
             ] as const
           ).map(([val, label]) => (
-            <button
+            <Button
               key={val}
-              type="button"
+              variant="outline"
+              active={buildingType === val}
               onClick={() => setBuildingType(val)}
-              class={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer ${
-                buildingType === val
-                  ? 'bg-primary text-primary-fg border-primary'
-                  : 'bg-white text-inherit border-border hover:bg-gray-50'
-              }`}
+              class="px-5 py-2.5"
             >
               {label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-2">Občina</label>
+        <label class="block text-base font-medium mb-2">Občina</label>
         <select
           value={municipality}
           onChange={handleMunicipalityChange}
-          class="w-full h-10 px-3 rounded-lg border border-border bg-white text-sm"
+          class="w-full h-12 px-3 rounded-lg border border-border bg-white text-base"
         >
-          <option value="">Izberi občino...</option>
+          <option value="" hidden>
+            Izberi občino
+          </option>
           {municipalities.map((m) => (
             <option key={m} value={m}>
               {m}
@@ -92,48 +92,60 @@ export function LocationForm({ loading, error, onSubmit }: Props) {
         </select>
       </div>
 
-      {municipality && (
-        <div>
-          <label class="block text-sm font-medium mb-2">Ulica</label>
-          <select
-            value={streetId}
-            onChange={handleStreetChange}
-            class="w-full h-10 px-3 rounded-lg border border-border bg-white text-sm"
+      <div>
+        <label class="block text-base font-medium mb-2">Ulica</label>
+        <select
+          value={streetId}
+          onChange={handleStreetChange}
+          class={`w-full h-12 px-3 rounded-lg border border-border text-base ${!municipality ? 'bg-gray-100 opacity-60 cursor-not-allowed' : 'bg-white'}`}
+          disabled={!municipality}
+        >
+          <option value="" hidden>
+            Izberi ulico
+          </option>
+          {filteredStreets.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-base font-medium mb-2">Hišna številka</label>
+        <input
+          type="text"
+          value={houseNumber}
+          onInput={(e) => setHouseNumber((e.target as HTMLInputElement).value)}
+          onKeyDown={(e) => e.key === 'Enter' && submit()}
+          placeholder="npr. 12B"
+          class={`w-full h-12 px-3 rounded-lg border border-border text-base ${!municipality ? 'bg-gray-100 opacity-60 cursor-not-allowed' : 'bg-white'}`}
+          disabled={!municipality}
+        />
+      </div>
+
+      <Button disabled={!canSubmit || loading} onClick={submit} class="w-full h-13">
+        {loading && (
+          <svg
+            class="animate-spin -ml-1 mr-2 h-5 w-5"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <option value="">Izberi ulico...</option>
-            {filteredStreets.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+            <path d="M22 12a1 1 0 0 1-10 0 1 1 0 0 0-10 0" />
+            <path d="M7 20.7a1 1 0 1 1 5-8.7 1 1 0 1 0 5-8.6" />
+            <path d="M7 3.3a1 1 0 1 1 5 8.6 1 1 0 1 0 5 8.6" />
+            <circle cx="12" cy="12" r="10" />
+          </svg>
+        )}
+        Poišči termine odvoza
+      </Button>
 
-      {municipality && (
-        <div>
-          <label class="block text-sm font-medium mb-2">Hišna številka</label>
-          <input
-            type="text"
-            value={houseNumber}
-            onInput={(e) => setHouseNumber((e.target as HTMLInputElement).value)}
-            onKeyDown={(e) => e.key === 'Enter' && submit()}
-            placeholder="npr. 12B"
-            class="w-full h-10 px-3 rounded-lg border border-border bg-white text-sm"
-          />
-        </div>
-      )}
-
-      <button
-        type="button"
-        disabled={!canSubmit || loading}
-        onClick={submit}
-        class="w-full h-11 rounded-lg bg-primary text-primary-fg font-medium text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-opacity"
-      >
-        {loading ? 'Nalagam...' : 'Poišči termine odvoza'}
-      </button>
-
-      {error && <p class="text-destructive text-sm">{error}</p>}
+      {error && <p class="text-destructive text-base">{error}</p>}
     </div>
   )
 }

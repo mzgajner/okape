@@ -1,4 +1,5 @@
 import { useMemo } from 'preact/hooks'
+import { Button } from './Button'
 import type { PickupEntry } from '../types'
 import { formatPickupDate } from '../date-format'
 
@@ -54,13 +55,9 @@ export function PickupResults({ pickups, onReset }: Props) {
         ))}
       </ul>
 
-      <button
-        type="button"
-        onClick={onReset}
-        class="w-full py-2 text-sm text-muted hover:text-inherit transition-colors cursor-pointer bg-transparent border-0"
-      >
+      <Button variant="outline" onClick={onReset} class="w-full py-2 mt-4">
         Spremeni lokacijo
-      </button>
+      </Button>
     </div>
   )
 }

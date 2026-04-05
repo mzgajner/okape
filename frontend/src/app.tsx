@@ -8,13 +8,13 @@ import garbageTruck from './assets/garbage_truck.svg'
 
 const STORAGE_KEY = 'okape-location'
 
-function loadSavedLocation(): SavedLocation | null {
+function loadSavedLocation(): SavedLocation | undefined {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
+    if (!raw) return undefined
     return JSON.parse(raw)
   } catch {
-    return null
+    return undefined
   }
 }
 
@@ -72,33 +72,30 @@ export function App() {
   }, [])
 
   return (
-    <div class="min-h-screen">
-      <div class="max-w-md mx-auto px-4 py-8">
+    <div class="min-h-screen flex items-center justify-center">
+      <div class="max-w-md w-full px-4 py-8">
         <div class="text-center mb-8">
           <img src={garbageTruck} alt="O Ka Pe" class="w-20 h-20 mx-auto mb-3" />
-          <h1 class="text-2xl font-bold text-primary">O Ka Pe</h1>
         </div>
 
-        <div class="bg-card-bg rounded-xl border border-border p-6 shadow-sm">
-          {pickups.length > 0 ? (
-            <PickupResults pickups={pickups} onReset={resetLocation} />
-          ) : autoLoading ? (
-            <div class="flex flex-col items-center gap-3 py-4">
-              <svg
-                class="h-6 w-6 animate-spin text-muted"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-              </svg>
-              <p class="text-sm text-muted">{autoLoadingLabel}</p>
-            </div>
-          ) : (
-            <LocationForm loading={loading} error={error} onSubmit={handleSubmit} />
-          )}
-        </div>
+        {pickups.length > 0 ? (
+          <PickupResults pickups={pickups} onReset={resetLocation} />
+        ) : autoLoading ? (
+          <div class="flex flex-col items-center gap-3 py-4">
+            <svg
+              class="h-6 w-6 animate-spin text-muted"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+            <p class="text-base text-muted">{autoLoadingLabel}</p>
+          </div>
+        ) : (
+          <LocationForm loading={loading} error={error} onSubmit={handleSubmit} />
+        )}
       </div>
     </div>
   )
