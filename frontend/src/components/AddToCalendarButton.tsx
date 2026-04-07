@@ -17,7 +17,7 @@ function getCalendarUrl(location: Location): string {
   }
 
   if (/Android/.test(ua)) {
-    return `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(`https://${host}${icsPath}`)}`
+    return `https://calendar.google.com/calendar/r?cid=webcal://${host}${icsPath}`
   }
 
   return `https://${host}${icsPath}`
