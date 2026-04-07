@@ -20,7 +20,7 @@ routerAdd('GET', '/api/pickup', (e) => {
   }
 })
 
-routerAdd('GET', '/api/calendar/{buildingType}/{streetId}/{houseNumber}', (e) => {
+routerAdd('GET', '/api/calendar/{buildingType}/{streetId}/{houseNumber}/calendar.ics', (e) => {
   try {
     const buildingType = Number(e.request.pathValue('buildingType'))
     const streetId = Number(e.request.pathValue('streetId'))
