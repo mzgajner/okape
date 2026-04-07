@@ -59,7 +59,7 @@ export function LocationSelection({ onSubmit }: Props) {
             variant="outline"
             active={buildingType === 'hisa'}
             onClick={() => setBuildingType('hisa')}
-            class="flex-1 py-2.5"
+            class="flex-1"
           >
             <IconHouse class="w-4 h-4 mr-1.5" />
             Hiša
@@ -68,7 +68,7 @@ export function LocationSelection({ onSubmit }: Props) {
             variant="outline"
             active={buildingType === 'blok'}
             onClick={() => setBuildingType('blok')}
-            class="flex-1 py-2.5"
+            class="flex-1"
           >
             <IconBuilding class="w-4 h-4 mr-1.5" />
             Blok

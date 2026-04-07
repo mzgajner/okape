@@ -74,7 +74,7 @@ export function PickupResults({ location, onReset }: Props) {
     return (
       <div class="space-y-4">
         <p class="text-destructive text-base text-center">{error}</p>
-        <Button variant="outline" onClick={onReset} class="w-full py-2">
+        <Button variant="outline" onClick={onReset} class="w-full">
           Spremeni lokacijo
         </Button>
       </div>
@@ -95,8 +95,8 @@ export function PickupResults({ location, onReset }: Props) {
         ))}
       </ul>
 
-      <AddToCalendarButton location={location} class="w-full py-2 mt-4" />
-      <Button variant="outline" onClick={onReset} class="w-full py-2">
+      <AddToCalendarButton location={location} class="mt-8" />
+      <Button variant="outline" onClick={onReset} class="w-full">
         Spremeni lokacijo
       </Button>
     </div>
